@@ -1,0 +1,82 @@
+{
+  "start": {
+    "name": "amazon",
+    "url": "www.amazon.com",
+    "links": [{
+        "name": "aws",
+        "url": "aws.amazon.com",
+        "links": [{
+            "name": "ec2",
+            "url": "ec2.amazon.com",
+            "links": []
+          },
+          {
+            "name": "rds",
+            "url": "rds.amazon.com",
+            "links": []
+          }
+        ]
+      },
+      {
+        "name": "deal",
+        "url": "deal.amazon.com",
+        "links": [{
+            "name": "dress",
+            "url": "dress.amazon.com",
+            "links": []
+          },
+          {
+            "name": "book",
+            "url": "book.amazon.com",
+            "links": []
+          }
+        ]
+      },
+      {
+        "name": "music",
+        "url": "music.amazon.com",
+        "links": [{
+            "name": "pop",
+            "url": "pop.amazon.com",
+            "links": []
+          },
+          {
+            "name": "jazz",
+            "url": "jazz.amazon.com",
+            "links": []
+          }
+        ]
+      },
+      {
+        "name": "prime",
+        "url": "prime.amazon.com",
+        "links": [{
+            "name": "trial",
+            "url": "trial.amazon.com",
+            "links": []
+          },
+          {
+            "name": "payment",
+            "url": "payment.amazon.com",
+            "links": []
+          }
+        ]
+      },
+      {
+        "name": "video",
+        "url": "video.amazon.com",
+        "links": [{
+            "name": "movie",
+            "url": "movie.amazon.com",
+            "links": []
+          },
+          {
+            "name": "tv",
+            "url": "tv.amazon.com",
+            "links": []
+          }
+        ]
+      }
+    ]
+  }
+}
