@@ -1,60 +1,27 @@
 {
-  "nodes": [
-    {
-      "id": 0,
-      "url": "www.amazon.com", 
-      "title": "Amazon",
-      "links": [1, 2, 3]
-    },
-
-    {
-      "id": 1,
-      "url": "www.amazon.com/prime", 
-      "title": "Amazon Prime",
-      "links": [0, 4, 5]
-    },
-
-    {
-      "id": 2,
-      "url": "www.amazon.com/music", 
-      "title": "Amazon Music",
-      "links": [0, 4, 5]
-    },
-
-    {
-      "id": 3,
-      "url": "www.amazon.com/toy", 
-      "title": "Amazon Toy",
-      "links": [0, 4, 5]
-    },
-
-    {
-      "id": 4,
-      "url": "www.amazon.com/cart", 
-      "title": "Amazon Cart",
-      "links": [0, 6, 7]
-    },
-
-    {
-      "id": 5,
-      "url": "www.amazon.com/wishlist", 
-      "title": "Amazon Wish List",
-      "links": [0, 6, 7]
-    },
-
-    {
-      "id": 6,
-      "url": "www.amazon.com/cart/checkout", 
-      "title": "Amazon Check Out",
-      "links": [0]
-    },
-
-    {
-      "id": 7,
-      "url": "www.amazon.com/wishlist/save", 
-      "title": "Amazon Wish List Saved",
-      "links": [0]
-    }
-  ]
+    "nodes": [
+        {"id": 0, "url": "www.amazon.com", "title": "Amazon", "group": 1},
+        {"id": 1, "url": "www.amazon.com/prime", "title": "Amazon Prime", "group": 2},
+        {"id": 2, "url": "www.amazon.com/music", "title": "Amazon Music", "group": 2},
+        {"id": 3, "url": "www.amazon.com/food", "title": "Amazon Food", "group": 2},
+        {"id": 4, "url": "www.amazon.com/electronics", "title": "Amazon Electronics", "group": 2},
+        {"id": 5, "url": "www.amazon.com/prime/membership", "title": "Amazon Prime Membership", "group": 3},
+        {"id": 6, "url": "www.amazon.com/prime/membership/cancellation", "title": "Amazon Prime Membership Cancellation", "group": 4},
+        {"id": 7, "url": "www.amazon.com/music/checkout", "title": "Amazon Music Checkout", "group": 3},
+        {"id": 8, "url": "www.amazon.com/music/listen", "title": "Amazon Music Listen", "group": 3},
+        {"id": 9, "url": "www.amazon.com/music/listen/download", "title": "Amazon Music Listen Download", "group": 4}
+    ],
+    "links": [
+        {"source": "0", "target": "1", "value": 1},
+        {"source": "0", "target": "2", "value": 1},
+        {"source": "0", "target": "3", "value": 1},
+        {"source": "0", "target": "4", "value": 1},
+        {"source": "1", "target": "5", "value": 1},
+        {"source": "5", "target": "6", "value": 1},
+        {"source": "2", "target": "7", "value": 1},
+        {"source": "2", "target": "8", "value": 1},
+        {"source": "8", "target": "9", "value": 1},
+        {"source": "1", "target": "9", "value": 2},
+        {"source": "0", "target": "9", "value": 3}
+    ]
 }
-
