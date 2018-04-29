@@ -10,52 +10,50 @@ class Node:
         self.id = Node.counter
         self.title = title
         self.url = url
-        self.links = []
         Node.counter += 1
 
 
 startUrl = "https://jsonformatter.curiousconcept.com/"
 limit = 1
+nodesPerLevel = 10
 page = requests.get(startUrl)
 soup = BeautifulSoup(page.content, "html.parser")
 links = soup.findAll("a")
-result = {'node': []}
+result = {'nodes': [], 'links': []}
 
 
-def appendNode(parentNode, childNode):
-    result['node'].append({
+def appendNode(parentNode, childNode, group):
+    result['nodes'].append({
         'id': childNode.id,
-        'title': childNode.title,
         'url': childNode.url,
-        'links': childNode.links
+        'title': childNode.title,
+        'group': group
     })
-    result['node'][parentNode.id]['links'].append(childNode.id)
+    # result['nodes'][parentNode.id]['links'].append(childNode.id)
 
-def crawlPage(parentNode, limit):
+def crawlPage(parentNode, limit, group):
     if not limit > 0:
         return
     page = requests.get(parentNode.url)
     soup = BeautifulSoup(page.content, "html.parser")
     links = soup.findAll("a")
     nodesFound = []
+    global nodesPerLevel
     for link in links:
-        # print("\n")
-        # print(link)
+        if len(nodesFound) >= nodesPerLevel:
+            break
         if  link.get('href') and link.get('href').startswith('http'):
             title = link.string
             url = link['href']
             currentNode = Node(title, url)
-            # print(currentNode.id)
-            # print(currentNode.title)
-            # print(currentNode.url)
-            appendNode(parentNode, currentNode)
+            appendNode(parentNode, currentNode, group)
             nodesFound.append(currentNode)
     for node in nodesFound:
-        crawlPage(node, limit-1)
+        crawlPage(node, limit-1, group+1)
 
 startNode = Node('Start', startUrl)
-appendNode(startNode, startNode)
-crawlPage(startNode, limit)
+appendNode(startNode, startNode, 1)
+crawlPage(startNode, limit, 2)
 
 
 print(json.dumps(result))
