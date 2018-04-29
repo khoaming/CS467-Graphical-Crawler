@@ -22,16 +22,16 @@ links = soup.findAll("a")
 result = {'nodes': [], 'links': []}
 
 
-def appendNode(parentNode, childNode, group):
+def appendNode(parentNode, childNode, depth):
     result['nodes'].append({
         'id': childNode.id,
         'url': childNode.url,
         'title': childNode.title,
-        'group': group
+        'depth': depth
     })
     # result['nodes'][parentNode.id]['links'].append(childNode.id)
 
-def crawlPage(parentNode, limit, group):
+def crawlPage(parentNode, limit, depth):
     if not limit > 0:
         return
     page = requests.get(parentNode.url)
@@ -46,10 +46,10 @@ def crawlPage(parentNode, limit, group):
             title = link.string
             url = link['href']
             currentNode = Node(title, url)
-            appendNode(parentNode, currentNode, group)
+            appendNode(parentNode, currentNode, depth)
             nodesFound.append(currentNode)
     for node in nodesFound:
-        crawlPage(node, limit-1, group+1)
+        crawlPage(node, limit-1, depth+1)
 
 startNode = Node('Start', startUrl)
 appendNode(startNode, startNode, 1)
