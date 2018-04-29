@@ -29,7 +29,12 @@ def appendNode(parentNode, childNode, depth):
         'title': childNode.title,
         'depth': depth
     })
-    # result['nodes'][parentNode.id]['links'].append(childNode.id)
+    if parentNode.id != childNode.id:
+        result['links'].append({
+            'source': parentNode.id,
+            'target': childNode.id,
+            'distance':result['nodes'][childNode.id]['depth'] - result['nodes'][parentNode.id]['depth']
+        })
 
 def crawlPage(parentNode, limit, depth):
     if not limit > 0:
