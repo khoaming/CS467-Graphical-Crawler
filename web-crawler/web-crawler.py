@@ -13,16 +13,18 @@ class Node:
         Node.counter += 1
 
 
-startUrl = "http://oregonstate.edu//"
+startUrl = "https://www.youtube.com/"
 limit = 1   # Used for breadth search, depth level
 mode = 2    # 1 = breadth search, 2 = depth search
 nodesPerLevel = 10
-nodesMaxDepth = 3
-searchKeyWord = ''
+nodesMaxDepth = 10
+nodesTotalMax = 20
+searchKeyWord = 'support'
 page = requests.get(startUrl)
 soup = BeautifulSoup(page.content, "html.parser")
 links = soup.findAll("a")
 result = {'nodes': [], 'links': []}
+nodesDict = {}
 
 if mode == 1:
     nodesPerLevel = 10  # breadth search, max 10 child nodes linked to parent node
@@ -39,6 +41,8 @@ def appendNode(parentNode, childNode, depth):
         'title': childNode.title,
         'depth': depth
     })
+    # print("Appending " + childNode.url)
+    nodesDict[childNode.url] = childNode
     if parentNode.id != childNode.id:
         result['links'].append({
             'source': parentNode.id,
@@ -50,6 +54,8 @@ def crawlPage(parentNode, limit, depth):
     if not limit > 0 and mode == 1:
         return
     if depth > nodesMaxDepth and mode == 2:
+        return
+    if len(nodesDict) >= nodesTotalMax:
         return
     # print(parentNode.id)
     # print(limit)
@@ -65,9 +71,13 @@ def crawlPage(parentNode, limit, depth):
         if  link.get('href') and link.get('href').startswith('http'):
             title = link.string
             url = link['href']
+            if url in nodesDict:        # Skip url already visited
+                continue
             currentNode = Node(title, url)
             appendNode(parentNode, currentNode, depth)
             nodesFound.append(currentNode)
+            if searchKeyWord in url:    # Stop when keyword found
+                return
             if mode == 2:   # Depth search
                 crawlPage(currentNode, limit-1, depth+1)
     if mode == 1:   # Breadth search
