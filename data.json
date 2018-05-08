@@ -21,7 +21,6 @@
         {"id": 18, "url": "https://www.amazon.com/music/listen/download/complete", "title": "Amazon Music Listen Download Complete", "depth": 5},
         {"id": 19, "url": "https://www.amazon.com/music/listen/download/complete", "title": "Amazon Music Listen Download Complete", "depth": 5},
         {"id": 20, "url": "https://www.amazon.com/music/listen/download/complete", "title": "Amazon Music Listen Download Complete", "depth": 5}
-
     ],
     "links": [
         {"source": 0, "target": 1, "distance": 1},
@@ -44,7 +43,8 @@
         {"source": 9, "target": 16, "distance": 1},
         {"source": 9, "target": 17, "distance": 1},
         {"source": 9, "target": 18, "distance": 1},
-        {"source": 9, "target": 19, "distance": 1},
-        {"source": 9, "target": 20, "distance": 1}
-    ]
+        {"source": 9, "target": 19, "distance": 3},
+        {"source": 9, "target": 20, "distance": 3}
+    ],
+    "keyword_node": 20
 }
