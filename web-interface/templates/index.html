@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html ng-app="crawlerApp">
+    <head>
+        <meta charset="utf-8">
+
+        <base href="/">
+        <link rel="stylesheet" href="/static/style.css">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:regular,bold" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" 
+            integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg"
+            crossorigin="anonymous">
+        <!-- TODO change to min -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-resource.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>      
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.js"></script>
+        <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+        <script src="/static/script.js"></script>
+    </head>
+    <body ng-controller="contentController">
+        <div id="content">
+            <div ng-view></div>
+        </div>
+    </body>
+</html>
+
