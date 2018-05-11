@@ -7,14 +7,12 @@ app = Flask(__name__, static_folder=STATIC_DIR, static_url_path='/static')
 
 @app.route('/')
 def form():
-    # print(TEMPLATE_DIR)
     return send_file('templates/index.html')
 
 
 @app.route('/<path:template>.html')
 def send_template(template):
     template_file = '{}.html'.format(os.path.join(TEMPLATE_DIR,template))
-    # print(template_file)  # , flush=True)
     return send_file(template_file)
 
 
@@ -28,7 +26,6 @@ def process_options():
     options_data["keyword"] = request.form.get("keyword")
 
     # run_crawler(options_data)
-    # print(options_data)
     return '', 200
 
 
