@@ -247,3 +247,23 @@ button#submit-button:focus {
     border-radius: 10px;
     box-shadow: 5px 5px 15px black;
 }
+
+.link {
+        fill: none;
+        stroke-width: 2px;
+}
+
+.tooltip {
+    position: absolute;
+    z-index: 10;
+    visibility: hidden;
+    background-color: skyblue;
+    text-align: center;
+    padding: 3px;
+    border-radius: 5px;
+    color: black;
+}
+
+/*svg {*/
+    /*background-color: lightcyan;*/
+/*}*/
