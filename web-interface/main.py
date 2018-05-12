@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template, request, send_file
+import crawler
 
 TEMPLATE_DIR = os.path.abspath('templates')
 STATIC_DIR = os.path.abspath('static')
@@ -25,7 +26,7 @@ def process_options():
     options_data["steps"] = request.form.get("steps")
     options_data["keyword"] = request.form.get("keyword")
 
-    # run_crawler(options_data)
+    crawler.startCrawl(options_data)
     return '', 200
 
 
