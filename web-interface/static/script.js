@@ -115,8 +115,13 @@ function initD3() {
             // pure random color
             // .attr("fill", function(d) { return (d.id === 0) ? "gray" : "hsl(" + (360 * Math.random()) + ",80%,60%)"})
             .attr("stroke", function(d) {
-                if (d.id === 0) return "black";
-                return (d.id === keyword_node) ? "red" : "hsl(" + (360 * random + 90 * d.depth) + ",80%,50%)"})
+                if (d.id === keyword_node) {
+                    return "red";
+                } else if (d.id === 0) {
+                    return "black";
+                } else {
+                    return "hsl(" + (360 * random + 90 * d.depth) + ",80%,50%)";
+                }})
             .attr("stroke-width", function(d) {return (d.id === keyword_node) ? "6px": "2px"})
             .call(d3.drag()
                 .on("start", dragstarted)
