@@ -60,10 +60,11 @@ def startCrawl(options_data):
     appendNode(startNode, startNode, 1)
     crawlPage(mode, startNode, limit, 2)
 
-    f = open('static/data.json', 'w')
-    print(json.dumps(result), file=f)
-    f.close()
-
+    # f = open('static/data.json', 'w')
+    # print(json.dumps(result), file=f)
+    with open('static/data.json', 'w') as f:
+        json.dump(result, f)
+        f.close()
 
 def appendNode(parentNode, childNode, depth):
     global result
