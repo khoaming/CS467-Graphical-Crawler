@@ -32,6 +32,7 @@ crawlerApp.controller('contentController', function($scope, $location) {
                 window.scrollTo(0,0);
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                //add error handling
             }
         });
     };

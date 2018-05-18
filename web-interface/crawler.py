@@ -52,7 +52,10 @@ def startCrawl(options_data):
         nodesMaxDepth = 10  # depth search, max nodes of depth
         limit = 20
     try:
-        page = requests.get(startUrl)
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
+        }
+        page = requests.get(startUrl, headers=headers)
         #check for valid domain
         page.raise_for_status()
     except requests.exceptions.HTTPError:
@@ -109,7 +112,10 @@ def crawlPage(mode, parentNode, limit, depth):
     # print(parentNode.id)
     # print(limit)
     # print(depth)
-    page = requests.get(parentNode.url)
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
+    }
+    page = requests.get(parentNode.url, headers=headers)
     # print(page.content)
     soup = BeautifulSoup(page.content, "lxml")
     links = soup.findAll("a")
