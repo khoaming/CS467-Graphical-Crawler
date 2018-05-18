@@ -1,6 +1,6 @@
 //https://scotch.io/tutorials/single-page-apps-with-angularjs-routing-and-templating
 var crawlerApp = angular.module('crawlerApp', ['ngRoute', 'ngAnimate']);
-var crawlerData = {};
+var graph = {};
 crawlerApp.config(function($routeProvider, $locationProvider) {
     $routeProvider
         .when('/', {
@@ -25,7 +25,7 @@ crawlerApp.controller('contentController', function($scope, $location) {
             data: $("#options-form").serialize(),
             success: function(data) {
                 console.log(data);
-                crawlerData = data;
+                graph = data;
                 $scope.$apply(function() {
                     $location.path( path );
                 });
@@ -86,100 +86,96 @@ function initD3() {
         .append("div")
         .attr('class', 'tooltip');
 
-    d3.json("./static/data.json", function(error, graph) {
-        if (error) throw error;
 
-        var keyword_node = graph.keyword_node;
+    var keyword_node = graph.keyword_node;
 
-        var nodes = graph.nodes,
-            nodeById = d3.map(nodes, function(d) {return d.id; }),
-            links = graph.links,
-            bilinks = [];
+    var nodes = graph.nodes,
+        nodeById = d3.map(nodes, function(d) {return d.id; }),
+        links = graph.links,
+        bilinks = [];
 
-        links.forEach(function(link) {
-            var s = nodeById.get(link.source),
-                t = nodeById.get(link.target),
-                i = {}; // intermediate node
-            nodes.push(i);
-            links.push({source: s, target: i}, {source: i, target: t});
-            bilinks.push([s, i, t]);
-        });
-
-        var link = everything.selectAll(".link")
-            .data(bilinks)
-            .enter().append("path")
-            .attr("class", "link")
-            // random color based on depth
-            .style("stroke", function(d) {return (d[0].id === 0) ? "black": "hsl(" + (360 * random + 90 * d[0].depth) + ",80%,50%)"});
-            // pure random color
-            // .style("stroke", function(d) {return (d[0].id === 0) ? "gray": "hsl(" + (360 * Math.random()) + ",80%,60%)"});
-        var node = everything.selectAll(".node")
-            .data(nodes.filter(function(d) {return d.depth; })) // to filter out intermediate nodes
-            .enter().append("circle")
-            .attr("class", "node")
-            .attr("r", 8)
-            // random color based on depth
-            .attr("fill", function(d) { return (d.id === 0) ? "gray" : "hsl(" + (360 * random + 90 * d.depth) + ",80%,80%)"})
-            // pure random color
-            // .attr("fill", function(d) { return (d.id === 0) ? "gray" : "hsl(" + (360 * Math.random()) + ",80%,60%)"})
-            .attr("stroke", function(d) {
-                if (d.id === keyword_node) {
-                    return "red";
-                } else if (d.id === 0) {
-                    return "black";
-                } else {
-                    return "hsl(" + (360 * random + 90 * d.depth) + ",80%,50%)";
-                }})
-            .attr("stroke-width", function(d) {return (d.id === keyword_node) ? "6px": "2px"})
-            .call(d3.drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended))
-
-            .on("click", function(d) {
-                tooltip.html('<a href="' + d.url + '">' + d.url + '</a>'); // show link
-            })
-
-            .on("dblclick", function(d) {
-                location.href = d.url; // go to link
-            })
-
-            .on("mouseover", function(d) {
-                d3.select(this).attr("r", 12);
-                // d3.select(this).style('stroke', 'lightgreen');
-                return tooltip.style("visibility", "visible").text(d.title);
-            })
-
-            // https://stackoverflow.com/questions/10805184/show-data-on-mouseover-of-circle
-            .on("mousemove", function() {
-                return tooltip.style("top", (event.pageY - 30) + "px")
-                    .style("left", event.pageX + "px");
-            })
-
-            // hide tooltip on "mouseout"
-            .on("mouseout", function(d) {
-                d3.select(this).attr("r", 8);
-                // d3.select(this).style('stroke', (d.id == 0) ? "red" : "silver");
-                return tooltip.style("visibility", "hidden");
-            });
-
-
-        // node.append("title")
-        //     .text(function(d) { return d.id; });
-
-        simulation
-            .nodes(nodes)
-            .on("tick", ticked);
-
-        simulation.force("link")
-            .links(links);
-
-        function ticked() {
-            link.attr("d", positionLink);
-            node.attr("transform", positionNode);
-        }
+    links.forEach(function(link) {
+        var s = nodeById.get(link.source),
+            t = nodeById.get(link.target),
+            i = {}; // intermediate node
+        nodes.push(i);
+        links.push({source: s, target: i}, {source: i, target: t});
+        bilinks.push([s, i, t]);
     });
 
+    var link = everything.selectAll(".link")
+        .data(bilinks)
+        .enter().append("path")
+        .attr("class", "link")
+        // random color based on depth
+        .style("stroke", function(d) {return (d[0].id === 0) ? "black": "hsl(" + (360 * random + 90 * d[0].depth) + ",80%,50%)"});
+        // pure random color
+        // .style("stroke", function(d) {return (d[0].id === 0) ? "gray": "hsl(" + (360 * Math.random()) + ",80%,60%)"});
+    var node = everything.selectAll(".node")
+        .data(nodes.filter(function(d) {return d.depth; })) // to filter out intermediate nodes
+        .enter().append("circle")
+        .attr("class", "node")
+        .attr("r", 8)
+        // random color based on depth
+        .attr("fill", function(d) { return (d.id === 0) ? "gray" : "hsl(" + (360 * random + 90 * d.depth) + ",80%,80%)"})
+        // pure random color
+        // .attr("fill", function(d) { return (d.id === 0) ? "gray" : "hsl(" + (360 * Math.random()) + ",80%,60%)"})
+        .attr("stroke", function(d) {
+            if (d.id === keyword_node) {
+                return "red";
+            } else if (d.id === 0) {
+                return "black";
+            } else {
+                return "hsl(" + (360 * random + 90 * d.depth) + ",80%,50%)";
+            }})
+        .attr("stroke-width", function(d) {return (d.id === keyword_node) ? "6px": "2px"})
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended))
+
+        .on("click", function(d) {
+            tooltip.html('<a href="' + d.url + '">' + d.url + '</a>'); // show link
+        })
+
+        .on("dblclick", function(d) {
+            location.href = d.url; // go to link
+        })
+
+        .on("mouseover", function(d) {
+            d3.select(this).attr("r", 12);
+            // d3.select(this).style('stroke', 'lightgreen');
+            return tooltip.style("visibility", "visible").text(d.title);
+        })
+
+        // https://stackoverflow.com/questions/10805184/show-data-on-mouseover-of-circle
+        .on("mousemove", function() {
+            return tooltip.style("top", (event.pageY - 30) + "px")
+                .style("left", event.pageX + "px");
+        })
+
+        // hide tooltip on "mouseout"
+        .on("mouseout", function(d) {
+            d3.select(this).attr("r", 8);
+            // d3.select(this).style('stroke', (d.id == 0) ? "red" : "silver");
+            return tooltip.style("visibility", "hidden");
+        });
+
+
+    // node.append("title")
+    //     .text(function(d) { return d.id; });
+
+    simulation
+        .nodes(nodes)
+        .on("tick", ticked);
+
+    simulation.force("link")
+        .links(links);
+
+    function ticked() {
+        link.attr("d", positionLink);
+        node.attr("transform", positionNode);
+    }
 
     function positionLink(d) {
         return "M " + d[0].x + "," + d[0].y
