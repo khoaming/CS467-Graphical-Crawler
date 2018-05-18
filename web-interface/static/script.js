@@ -1,6 +1,6 @@
 //https://scotch.io/tutorials/single-page-apps-with-angularjs-routing-and-templating
 var crawlerApp = angular.module('crawlerApp', ['ngRoute', 'ngAnimate']);
-
+var crawlerData = {};
 crawlerApp.config(function($routeProvider, $locationProvider) {
     $routeProvider
         .when('/', {
@@ -19,14 +19,21 @@ crawlerApp.controller('contentController', function($scope, $location) {
     $scope.$on('$routeChangeSuccess', function() {
     });
     $scope.go = function ( path ) {
-        $('#submit-button').animate({
-            'marginLeft': "70%",
-        }, {duration: 600, queue:false});
-        $.post("process-options", $("#options-form").serialize(), function(data) {
-
+        $.ajax({
+            type: "POST",
+            url: "process-options",
+            data: $("#options-form").serialize(),
+            success: function(data) {
+                console.log(data);
+                crawlerData = data;
+                $scope.$apply(function() {
+                    $location.path( path );
+                });
+                window.scrollTo(0,0);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+            }
         });
-        $location.path( path );
-        window.scrollTo(0,0);
     };
 });
 

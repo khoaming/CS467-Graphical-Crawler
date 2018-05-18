@@ -1,6 +1,7 @@
 import os
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, jsonify
 import crawler
+import re
 
 TEMPLATE_DIR = os.path.abspath('templates')
 STATIC_DIR = os.path.abspath('static')
@@ -21,13 +22,32 @@ def send_template(template):
 def process_options():
     options_data = {}
     options_data["website"] = request.form.get("website")
-    # validate_website()
-    options_data["traversal"] = request.form.get("traversal")
-    options_data["steps"] = request.form.get("steps")
-    options_data["keyword"] = request.form.get("keyword")
 
-    crawler.startCrawl(options_data)
-    return '', 200
+    #validate traversal method
+    if request.form.get("traversal") == "breadth" or request.form.get("traversal") == "depth":
+        options_data["traversal"] = request.form.get("traversal")
+    else:
+        return 'Invalid traversal method', 400
+
+    #validate step number    
+    try:
+        options_data["steps"] = int(request.form.get("steps"))
+        if options_data["steps"] > 5 or options_data["steps"] < 1:
+            return 'Steps out of range', 400
+    except ValueError:
+        return 'Steps is not a valid value', 400
+
+    options_data["keyword"] = request.form.get("keyword")
+    if options_data["keyword"] == "":
+        options_data["keyword"] = None
+
+    try:
+        result = crawler.startCrawl(options_data)
+    except ValueError:
+        #invalid url
+        return 'Invalid URL provided', 400
+    print(jsonify(result))
+    return jsonify(result), 200
 
 
 

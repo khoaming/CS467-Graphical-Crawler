@@ -35,6 +35,10 @@ body {
     background-image: url("pink-dust.png");
 }
 
+bold {
+    font-weight: bold;
+}
+
 ol, ul {
 	list-style: none;
 }

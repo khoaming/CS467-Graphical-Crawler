@@ -35,7 +35,7 @@ def startCrawl(options_data):
 
     startUrl = options_data.get('website')
     mode = options_data.get('traversal')
-    limit = int(options_data.get('steps'))
+    limit = options_data.get('steps')
     searchKeyWord = options_data.get('keyword')
 
     print(startUrl)
@@ -51,8 +51,12 @@ def startCrawl(options_data):
         nodesPerLevel = 2   # depth search, max children nodes linked to parent node
         nodesMaxDepth = 10  # depth search, max nodes of depth
         limit = 20
-
-    page = requests.get(startUrl)
+    try:
+        page = requests.get(startUrl)
+        #check for valid domain
+        page.raise_for_status()
+    except requests.exceptions.HTTPError:
+        raise ValueError
     soup = BeautifulSoup(page.content, "lxml")
     links = soup.findAll("a")
     result = {'nodes': [], 'links': []}
@@ -65,6 +69,8 @@ def startCrawl(options_data):
     with open('static/data.json', 'w') as f:
         json.dump(result, f)
         f.close()
+
+    return result
 
 def appendNode(parentNode, childNode, depth):
     global result
@@ -143,3 +149,11 @@ def crawlPage(mode, parentNode, limit, depth):
     if mode == 'breadth':   # Breadth search
         for node in nodesFound:
             crawlPage(mode, node, limit-1, depth+1)
+
+if __name__ == "__main__":
+    options_data = {
+        "website": "www.google.com",
+        "traversal": "breadth",
+        "steps": 2,
+    }
+    startCrawl(options_data)
