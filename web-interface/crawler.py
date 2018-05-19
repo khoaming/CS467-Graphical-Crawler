@@ -77,10 +77,11 @@ def startCrawl(options_data):
 def appendNode(parentNode, childNode, depth):
     global result
     global nodesDict
+    title = childNode.title if childNode.title else 'No Title'
     result['nodes'].append({
         'id': childNode.id,
         'url': childNode.url,
-        'title': childNode.title,
+        'title': title,
         'depth': depth
     })
     # print("Appending " + childNode.url)
