@@ -139,7 +139,10 @@ function initD3() {
         })
 
         .on("dblclick", function(d) {
-            location.href = d.url; // go to link
+            window.open(
+                d.url,
+                '_blank'
+            );
         })
 
         .on("mouseover", function(d) {
@@ -160,10 +163,6 @@ function initD3() {
             // d3.select(this).style('stroke', (d.id == 0) ? "red" : "silver");
             return tooltip.style("visibility", "hidden");
         });
-
-
-    // node.append("title")
-    //     .text(function(d) { return d.id; });
 
     simulation
         .nodes(nodes)
