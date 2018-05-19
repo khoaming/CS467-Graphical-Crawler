@@ -48,12 +48,12 @@ def startCrawl(options_data):
     if not startUrl.startswith('http'):
         startUrl = 'http://' + startUrl
     if mode == 'breadth':
-        nodesPerLevel = 10      # breadth search, max 10 child nodes linked to parent node
-        nodesMaxDepth = steps   # depth search, max nodes of depth
+        nodesPerLevel = 30          # breadth search, max 30 child nodes linked to parent node
+        nodesMaxDepth = 1 + steps   # depth search, max nodes of depth
         nodesTotalMax = 50
     if mode == 'depth':
-        nodesPerLevel = 1       # depth search, max children nodes linked to parent node
-        nodesMaxDepth = steps   # depth search, max nodes of depth
+        nodesPerLevel = 1           # depth search, max children nodes linked to parent node
+        nodesMaxDepth = 1 + steps   # depth search, max nodes of depth
         nodesTotalMax = 20
     try:
         headers = {
@@ -70,8 +70,8 @@ def startCrawl(options_data):
     nodesDict = {}
     Node.counter = 0
     startNode = Node('Start', startUrl)
-    appendNode(startNode, startNode, 0)
-    crawlPage(mode, startNode, 1)
+    appendNode(startNode, startNode, 1)
+    crawlPage(mode, startNode, 2)
 
     # f = open('static/data.json', 'w')
     # print(json.dumps(result), file=f)
@@ -111,9 +111,9 @@ def crawlPage(mode, parentNode, depth):
     if depth > nodesMaxDepth:
         # print("depth > nodesMaxDepth")
         return
-    if len(nodesDict) >= nodesTotalMax:
-        # print(">= nodesTotalMax")
-        return
+    # if len(nodesDict) >= nodesTotalMax:
+    #     # print(">= nodesTotalMax")
+    #     return
     # print(parentNode.id)
     # print(limit)
     # print(depth)
