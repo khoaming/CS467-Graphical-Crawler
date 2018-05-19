@@ -32,26 +32,29 @@ def startCrawl(options_data):
     global result
     global nodesPerLevel
     global nodesMaxDepth
+    global nodesTotalMax
     global nodesDict
 
     startUrl = options_data.get('website')
     mode = options_data.get('traversal')
-    limit = options_data.get('steps')
+    steps = options_data.get('steps')
     searchKeyWord = options_data.get('keyword')
 
     print(startUrl)
     print(mode)
-    print(limit)
+    print(steps)
     print(searchKeyWord)
 
     if not startUrl.startswith('http'):
         startUrl = 'http://' + startUrl
     if mode == 'breadth':
-        nodesPerLevel = 10  # breadth search, max 10 child nodes linked to parent node
+        nodesPerLevel = 10      # breadth search, max 10 child nodes linked to parent node
+        nodesMaxDepth = steps   # depth search, max nodes of depth
+        nodesTotalMax = 50
     if mode == 'depth':
-        nodesPerLevel = 2   # depth search, max children nodes linked to parent node
-        nodesMaxDepth = 10  # depth search, max nodes of depth
-        limit = 20
+        nodesPerLevel = 1       # depth search, max children nodes linked to parent node
+        nodesMaxDepth = steps   # depth search, max nodes of depth
+        nodesTotalMax = 20
     try:
         headers = {
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
@@ -67,14 +70,14 @@ def startCrawl(options_data):
     nodesDict = {}
     Node.counter = 0
     startNode = Node('Start', startUrl)
-    appendNode(startNode, startNode, 1)
-    crawlPage(mode, startNode, limit, 2)
+    appendNode(startNode, startNode, 0)
+    crawlPage(mode, startNode, 1)
 
     # f = open('static/data.json', 'w')
     # print(json.dumps(result), file=f)
-    # with open('static/data.json', 'w') as f:
-    #     json.dump(result, f)
-    #     f.close()
+    with open('static/data.json', 'w') as f:
+        json.dump(result, f)
+        f.close()
     return result
 
 def appendNode(parentNode, childNode, depth):
@@ -95,17 +98,17 @@ def appendNode(parentNode, childNode, depth):
             'distance':result['nodes'][childNode.id]['depth'] - result['nodes'][parentNode.id]['depth']
         })
 
-def crawlPage(mode, parentNode, limit, depth):
+def crawlPage(mode, parentNode, depth):
     global nodesMaxDepth
     global nodesTotalMax
     global nodesPerLevel
     global result
     global nodesDict
     # print("CRAWL PAGE: " + parentNode.url)
-    if not limit > 0 and mode == 'breadth':
-        # print("limit > 0")
-        return
-    if depth > nodesMaxDepth and mode == 'depth':
+    # if not limit > 0 and mode == 'breadth':
+    #     # print("limit > 0")
+    #     return
+    if depth > nodesMaxDepth:
         # print("depth > nodesMaxDepth")
         return
     if len(nodesDict) >= nodesTotalMax:
@@ -153,10 +156,10 @@ def crawlPage(mode, parentNode, limit, depth):
             nodesFound.append(currentNode)
             if mode == 'depth':   # Depth search
                 # print("Should crawl page: " + currentNode.url)
-                crawlPage(mode, currentNode, limit-1, depth+1)
+                crawlPage(mode, currentNode, depth+1)
     if mode == 'breadth':   # Breadth search
         for node in nodesFound:
-            crawlPage(mode, node, limit-1, depth+1)
+            crawlPage(mode, node, depth+1)
 
 if __name__ == "__main__":
     options_data = {
