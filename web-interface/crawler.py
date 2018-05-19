@@ -32,6 +32,7 @@ def startCrawl(options_data):
     global result
     global nodesPerLevel
     global nodesMaxDepth
+    global nodesDict
 
     startUrl = options_data.get('website')
     mode = options_data.get('traversal')
@@ -63,16 +64,17 @@ def startCrawl(options_data):
     soup = BeautifulSoup(page.content, "lxml")
     links = soup.findAll("a")
     result = {'nodes': [], 'links': []}
+    nodesDict = {}
+    Node.counter = 0
     startNode = Node('Start', startUrl)
     appendNode(startNode, startNode, 1)
     crawlPage(mode, startNode, limit, 2)
 
     # f = open('static/data.json', 'w')
     # print(json.dumps(result), file=f)
-    with open('static/data.json', 'w') as f:
-        json.dump(result, f)
-        f.close()
-
+    # with open('static/data.json', 'w') as f:
+    #     json.dump(result, f)
+    #     f.close()
     return result
 
 def appendNode(parentNode, childNode, depth):
@@ -99,7 +101,7 @@ def crawlPage(mode, parentNode, limit, depth):
     global nodesPerLevel
     global result
     global nodesDict
-    # print("CRAW PAGE: " + parentNode.url)
+    # print("CRAWL PAGE: " + parentNode.url)
     if not limit > 0 and mode == 'breadth':
         # print("limit > 0")
         return
