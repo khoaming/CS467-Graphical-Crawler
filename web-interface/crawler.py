@@ -72,6 +72,7 @@ def startCrawl(options_data):
     startNode = Node('Start', startUrl)
     appendNode(startNode, startNode, 1)
     crawlPage(mode, startNode, 2)
+    return result
 
 def appendNode(parentNode, childNode, depth):
     global result
