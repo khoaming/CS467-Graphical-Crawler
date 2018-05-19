@@ -23,7 +23,6 @@ class Node:
 nodesPerLevel = 10
 nodesMaxDepth = 10
 nodesTotalMax = 20
-searchKeyWord = 'support'
 nodesDict = {}
 result = {}
 
@@ -34,6 +33,7 @@ def startCrawl(options_data):
     global nodesMaxDepth
     global nodesTotalMax
     global nodesDict
+    global searchKeyWord
 
     startUrl = options_data.get('website')
     mode = options_data.get('traversal')
@@ -72,13 +72,6 @@ def startCrawl(options_data):
     startNode = Node('Start', startUrl)
     appendNode(startNode, startNode, 1)
     crawlPage(mode, startNode, 2)
-
-    # f = open('static/data.json', 'w')
-    # print(json.dumps(result), file=f)
-    with open('static/data.json', 'w') as f:
-        json.dump(result, f)
-        f.close()
-    return result
 
 def appendNode(parentNode, childNode, depth):
     global result
@@ -124,17 +117,19 @@ def crawlPage(mode, parentNode, depth):
     # print(page.content)
     soup = BeautifulSoup(page.content, "lxml")
     links = soup.findAll("a")
-    texts = soup.findAll(text=True)
-    visible_texts = filter(tag_visible, texts)
-    # print(u" ".join(t.strip() for t in visible_texts))
-    for t in visible_texts:
-        if searchKeyWord and searchKeyWord in t.strip():
-            # print(parentNode.url)
-            # print(t.strip())
-            # print("FOUND KEYWORD")
-            parentNode.keyword = searchKeyWord
-            result['keyword_node'] = parentNode.id
-            return
+
+    if searchKeyWord:
+        texts = soup.findAll(text=True)
+        visible_texts = filter(tag_visible, texts)
+        # print(u" ".join(t.strip() for t in visible_texts))
+        for t in visible_texts:
+            if searchKeyWord in t.strip():
+                # print(parentNode.url)
+                # print(t.strip())
+                # print("FOUND KEYWORD")
+                # parentNode.keyword = searchKeyWord
+                result['keyword_node'] = parentNode.id
+                return
 
     nodesFound = []
     # print("Found links for url:" + parentNode.url)
@@ -161,10 +156,10 @@ def crawlPage(mode, parentNode, depth):
         for node in nodesFound:
             crawlPage(mode, node, depth+1)
 
-if __name__ == "__main__":
-    options_data = {
-        "website": "www.google.com",
-        "traversal": "breadth",
-        "steps": 2,
-    }
-    startCrawl(options_data)
+# if __name__ == "__main__":
+#     options_data = {
+#         "website": "www.google.com",
+#         "traversal": "breadth",
+#         "steps": 2,
+#     }
+#     startCrawl(options_data)
