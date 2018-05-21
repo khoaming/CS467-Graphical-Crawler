@@ -4,16 +4,17 @@
     <p>You must choose your <bold>traversal</bold> method and number of <bold>steps</bold> to take from the original URL.</p>
     <p>You may also choose a <bold>keyword</bold>, which will terminate the crawling if it is found.</p>
 </header>
+<div id="required-bar"><span class="error-text">Error: One or more required parameters is missing.</span></div>
 <form id="options-form">
     <div class="option">
-        <h2>Enter a starting website</h2>
+        <h2>Enter a starting website <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
         <span class="input">
-            <input type="text" name="website" required>
+            <input type="text" name="website" id="website-input" required>
         </span>
     </div>
 
     <div class="option">
-        <h2>Traversal type</h2>
+        <h2>Traversal type <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
         <ul class="input">
             <li class="trav-option">
                 <input type="radio" name="traversal" id="depth-option" value="depth" required>
@@ -29,7 +30,7 @@
     </div>
 
     <div class="option">    
-        <h2>Number of steps</h2>
+        <h2>Number of steps <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
         <span class="input" id="range-slider">
             <input type="range" min="1" max="5" value="3" class="slider" name="steps">
             <ul id="slider-labels">

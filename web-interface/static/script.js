@@ -19,22 +19,24 @@ crawlerApp.controller('contentController', function($scope, $location) {
     $scope.$on('$routeChangeSuccess', function() {
     });
     $scope.go = function ( path ) {
-        $.ajax({
-            type: "POST",
-            url: "process-options",
-            data: $("#options-form").serialize(),
-            success: function(data) {
-                console.log(data);
-                graph = data;
-                $scope.$apply(function() {
-                    $location.path( path );
-                });
-                window.scrollTo(0,0);
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                //add error handling
-            }
-        });
+        if(checkFormFilled()) {
+            $.ajax({
+                type: "POST",
+                url: "process-options",
+                data: $("#options-form").serialize(),
+                success: function(data) {
+                    console.log(data);
+                    graph = data;
+                    $scope.$apply(function() {
+                        $location.path( path );
+                    });
+                    window.scrollTo(0,0);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    //add error handling
+                }
+            });
+        }
     };
 });
 
@@ -50,6 +52,19 @@ crawlerApp.directive("graph", function() {
         }
     }
 });
+
+function checkFormFilled() {
+    var filled = true;
+    if($("#website-input").val() === "" || !($("#depth-option").is(":checked") || $("#breadth-option").is(":checked"))) {
+        filled = false;
+        if($("#required-bar").hasClass("error-found")) {
+            $("#required-bar").removeClass("error-found");
+            void document.getElementById("required-bar").offsetWidth;
+        }
+        $("#required-bar").toggleClass("error-found");
+    }
+    return filled;
+}
 
 function initD3() {
     var random = Math.random();

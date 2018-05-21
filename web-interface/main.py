@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, send_file, jsonify
+from flask import Flask, render_template, request, send_file, jsonify, redirect, url_for
 import crawler
 import re
 
@@ -11,6 +11,9 @@ app = Flask(__name__, static_folder=STATIC_DIR, static_url_path='/static')
 def form():
     return send_file('templates/index.html')
 
+@app.route('/results')
+def redirect_to_home():
+    return redirect(url_for('form'))
 
 @app.route('/<path:template>.html')
 def send_template(template):
