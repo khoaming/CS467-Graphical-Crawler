@@ -45,10 +45,10 @@ crawlerApp.directive("graph", function() {
         link: function(scope, element, attrs) {
             initD3();
             //redraw the element when the window is resized?
-            window.addEventListener("resize", function() {
-                $("svg").remove();
-                initD3();
-            });
+            // window.addEventListener("resize", function() {
+            //     $("svg").remove();
+            //     initD3();
+            // });
         }
     }
 });
@@ -123,16 +123,16 @@ function initD3() {
         .enter().append("path")
         .attr("class", "link")
         // random color based on depth
-        .style("stroke", function(d) {return (d[0].id === 0) ? "black": "hsl(" + (360 * random + 90 * d[0].depth) + ",80%,50%)"});
+        .style("stroke", function(d) {return (d[0].id === 0) ? "black": "hsl(" + (360 * random + 60 * d[0].depth) + ",80%,40%)"});
         // pure random color
         // .style("stroke", function(d) {return (d[0].id === 0) ? "gray": "hsl(" + (360 * Math.random()) + ",80%,60%)"});
     var node = everything.selectAll(".node")
-        .data(nodes.filter(function(d) {return d.depth; })) // to filter out intermediate nodes
+        .data(nodes.filter(function(d) {return d.depth + 1; })) // to filter out intermediate nodes
         .enter().append("circle")
         .attr("class", "node")
         .attr("r", 8)
         // random color based on depth
-        .attr("fill", function(d) { return (d.id === 0) ? "gray" : "hsl(" + (360 * random + 90 * d.depth) + ",80%,80%)"})
+        .attr("fill", function(d) { return (d.id === 0) ? "gray" : "hsl(" + (360 * random + 60 * d.depth) + ",80%,80%)"})
         // pure random color
         // .attr("fill", function(d) { return (d.id === 0) ? "gray" : "hsl(" + (360 * Math.random()) + ",80%,60%)"})
         .attr("stroke", function(d) {
@@ -141,7 +141,7 @@ function initD3() {
             } else if (d.id === 0) {
                 return "black";
             } else {
-                return "hsl(" + (360 * random + 90 * d.depth) + ",80%,50%)";
+                return "hsl(" + (360 * random + 60 * d.depth) + ",80%,40%)";
             }})
         .attr("stroke-width", function(d) {return (d.id === keyword_node) ? "6px": "2px"})
         .call(d3.drag()
@@ -168,8 +168,8 @@ function initD3() {
 
         // https://stackoverflow.com/questions/10805184/show-data-on-mouseover-of-circle
         .on("mousemove", function() {
-            return tooltip.style("top", (event.pageY - 30) + "px")
-                .style("left", event.pageX + "px");
+            return tooltip.style("top", (d3.event.pageY - 30) + "px")
+                .style("left", d3.event.pageX + "px");
         })
 
         // hide tooltip on "mouseout"
