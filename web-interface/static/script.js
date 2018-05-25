@@ -47,8 +47,15 @@ crawlerApp.controller('contentController', function($scope, $location) {
                     });
                     window.scrollTo(0,0);
                 },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    stopLoadingAfterError();
+                statusCode: {
+                    400: function() {
+                        stopLoadingAfterError();
+                        showErrorBar("There was a problem with your request.");
+                    },
+                    500: function() {
+                        stopLoadingAfterError();
+                        showErrorBar("Unknown error. Please try again.");
+                    }
                 }
             });
         }
@@ -99,21 +106,19 @@ function stopLoadingAfterError() {
     //hide loading modal
     $("#loading-modal").
     css("opacity", "0");
-
-    showErrorBar("Error: There was a problem with your request.");
-    
 }
+
 function checkFormFilled() {
     var filled = true;
     if($("#website-input").val() === "" || !($("#depth-option").is(":checked") || $("#breadth-option").is(":checked"))) {
         filled = false;
-        showErrorBar("Error: One or more required parameters is missing.")
+        showErrorBar("One or more required parameters is missing.")
     }
     return filled;
 }
 
 function showErrorBar(text) {
-    $("#error-text").text(text);
+    $("#error-text").text("Error: " + text);
     if($("#required-bar").hasClass("error-found")) {
         $("#required-bar").removeClass("error-found");
         void document.getElementById("required-bar").offsetWidth;
