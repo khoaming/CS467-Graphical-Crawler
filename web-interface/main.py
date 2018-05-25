@@ -211,9 +211,8 @@ def tryUrl(url):
         #check for valid domain
         page.raise_for_status()
         return page.content
-    except requests.exceptions.HTTPError:
-        # raise ValueError
-        pass
+    except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as e:
+        raise ValueError
 
 
 if __name__ == '__main__':

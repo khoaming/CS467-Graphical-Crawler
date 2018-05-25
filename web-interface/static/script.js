@@ -29,6 +29,10 @@ crawlerApp.controller('contentController', function($scope, $location) {
             var traversalInput = $("input[name=traversal]:checked").val();
             var stepsInput = $("#steps-input").val();
             var keywordInput = $("#keyword-input").val();
+            $("#form-container")
+            .css({"-webkit-filter":"blur(3px)", "-moz-filter":"blur(3px)", "-o-filter":"blur(3px)", "-ms-filter":"blur(3px)", "filter":"blur(3px)", "pointer-events":"none"});
+            $("#loading-modal").
+            css("opacity", "1");
             $.ajax({
                 type: "POST",
                 url: "process-options",
@@ -66,13 +70,6 @@ crawlerApp.directive("graph", function() {
         }
     }
 });
-
-function populateFormFromCookies() {
-    var website = Cookies.get("website");
-    var traversal = Cookies.get("traversal");
-    var steps = Cookies.get("steps");
-    var keyword = Cookies.get("keyword");
-}
 
 function checkFormFilled() {
     var filled = true;

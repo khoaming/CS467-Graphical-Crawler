@@ -64,7 +64,6 @@ h1, h2 {
 
 h1 {
     font-size: 60px;
-
 }
 
 p {
@@ -238,8 +237,28 @@ button#submit-button:focus {
     outline:none;
 }
 
-#loading {
+#loading-modal {
     opacity: 0;
+    position: fixed;
+    border-radius: 10px;
+    background-color: #E1E1E1;
+    border: 2px solid black;
+    width: 300px;
+    height: 100px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 1px 1px 10px black;
+    text-align: center;
+}
+
+.loading-text {
+    position: absolute;
+    color: black;
+    font-size: 40px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 #results-page {
     display: none;

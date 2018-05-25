@@ -1,3 +1,4 @@
+<div id="form-container">
 <header>
     <h1>OctoGraph Generator</h1>
     <p>Enter a <bold>website</bold> below and the crawler will generate a graph of the links expanding out from the starting point.</p>
@@ -50,4 +51,6 @@
         </span>
     </div>
 </form>
-<button id="submit-button" ng-click="go('/results')">Go! <i class="fas fa-angle-double-right"></i></button></div>
+<button id="submit-button" ng-click="go('/results')">Go! <i class="fas fa-angle-double-right"></i></button>
+</div>
+<div id="loading-modal"><span class="loading-text"><img src="static/ajax-loader.gif" /><br />Loading...</span></div>
