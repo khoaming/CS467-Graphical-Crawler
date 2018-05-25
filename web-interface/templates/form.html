@@ -9,7 +9,7 @@
     <div class="option">
         <h2>Enter a starting website <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
         <span class="input">
-            <input type="text" name="website" id="website-input" required>
+            <input type="text" name="website" id="website-input" ng-value="website" required>
         </span>
     </div>
 
@@ -17,12 +17,12 @@
         <h2>Traversal type <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
         <ul class="input">
             <li class="trav-option">
-                <input type="radio" name="traversal" id="depth-option" value="depth" required>
+                <input type="radio" name="traversal" id="depth-option" ng-model="traversal" value="depth" required>
                 <span class="radio-button"></span>
                 <label for="depth-option">Depth-first</label>
             </li>
             <li class="trav-option">
-                <input type="radio" name="traversal" id="breadth-option" value="breadth">
+                <input type="radio" name="traversal" id="breadth-option" ng-model="traversal" value="breadth">
                 <span class="radio-button"></span>
                 <label for="breadth-option">Breadth-first</label>
             </li>
@@ -32,7 +32,7 @@
     <div class="option">    
         <h2>Number of steps <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
         <span class="input" id="range-slider">
-            <input type="range" min="1" max="5" value="3" class="slider" name="steps">
+            <input type="range" min="1" max="5" ng-value="steps" class="slider" name="steps" id="steps-input">
             <ul id="slider-labels">
             <li class="slider-label">1
             <li class="slider-label">2
@@ -46,7 +46,7 @@
     <div class="option">
         <h2>Keyword (optional)</h2>
         <span class="input">        
-            <input type="text" name="keyword">
+            <input type="text" id="keyword-input" name="keyword" ng-value="keyword">
         </span>
     </div>
 </form>

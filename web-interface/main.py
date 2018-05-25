@@ -51,7 +51,6 @@ def process_options():
     try:
         crawler = Crawler(options_data)
         result = crawler.start()
-        # result = crawler.startCrawl(options_data)
     except ValueError:
         #invalid url
         return 'Invalid URL provided', 400

@@ -16,16 +16,30 @@ crawlerApp.config(function($routeProvider, $locationProvider) {
 });
 
 crawlerApp.controller('contentController', function($scope, $location) {
-    $scope.$on('$routeChangeSuccess', function() {
-    });
+    $scope.website = Cookies.get("website");
+    $scope.traversal = Cookies.get("traversal");
+    $scope.steps = Cookies.get("steps");
+    if(angular.isUndefined($scope.steps)) {
+        $scope.steps = 3;
+    }
+    $scope.keyword = Cookies.get("keyword");
     $scope.go = function ( path ) {
         if(checkFormFilled()) {
+            var websiteInput = $("#website-input").val();
+            var traversalInput = $("input[name=traversal]:checked").val();
+            var stepsInput = $("#steps-input").val();
+            var keywordInput = $("#keyword-input").val();
             $.ajax({
                 type: "POST",
                 url: "process-options",
                 data: $("#options-form").serialize(),
                 success: function(data) {
-                    console.log(data);
+                    Cookies.set("website", websiteInput);
+                    Cookies.set("traversal", traversalInput);
+                    Cookies.set("steps", stepsInput);
+                    if(keywordInput !== "") {
+                        Cookies.set("keyword", keywordInput);
+                    }
                     graph = data;
                     $scope.$apply(function() {
                         $location.path( path );
@@ -52,6 +66,13 @@ crawlerApp.directive("graph", function() {
         }
     }
 });
+
+function populateFormFromCookies() {
+    var website = Cookies.get("website");
+    var traversal = Cookies.get("traversal");
+    var steps = Cookies.get("steps");
+    var keyword = Cookies.get("keyword");
+}
 
 function checkFormFilled() {
     var filled = true;
