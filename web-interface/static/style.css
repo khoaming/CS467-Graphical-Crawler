@@ -290,14 +290,15 @@ button#submit-button:focus {
 
 @keyframes error-appears {
     0% {top: -25px;}
-    50% {top: 0px;}
+    20% {top: 0px;}
+    80% {top: 0px;}
     100% {top: -25px;}
 }
 
 .error-found {
     opacity: 1 !important;
     animation-name: error-appears;
-    animation-duration: 2.0s;
+    animation-duration: 5.0s;
 }
 
 #required-bar {
@@ -312,6 +313,6 @@ button#submit-button:focus {
     opacity: 0;
 }
 
-.error-text {
+#error-text {
     color: red;
 }

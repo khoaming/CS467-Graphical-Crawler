@@ -29,10 +29,7 @@ crawlerApp.controller('contentController', function($scope, $location) {
             var traversalInput = $("input[name=traversal]:checked").val();
             var stepsInput = $("#steps-input").val();
             var keywordInput = $("#keyword-input").val();
-            $("#form-container")
-            .css({"-webkit-filter":"blur(3px)", "-moz-filter":"blur(3px)", "-o-filter":"blur(3px)", "-ms-filter":"blur(3px)", "filter":"blur(3px)", "pointer-events":"none"});
-            $("#loading-modal").
-            css("opacity", "1");
+            initiateLoading();
             $.ajax({
                 type: "POST",
                 url: "process-options",
@@ -51,7 +48,7 @@ crawlerApp.controller('contentController', function($scope, $location) {
                     window.scrollTo(0,0);
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    //add error handling
+                    stopLoadingAfterError();
                 }
             });
         }
@@ -71,17 +68,57 @@ crawlerApp.directive("graph", function() {
     }
 });
 
+function initiateLoading() {
+    //blur form and make unclickable
+    $("#form-container")
+    .css(
+        {"-webkit-filter":"blur(3px)", 
+        "-moz-filter":"blur(3px)", 
+        "-o-filter":"blur(3px)", 
+        "-ms-filter":"blur(3px)", 
+        "filter":"blur(3px)", 
+        "pointer-events":"none"}
+    );
+
+    //show loading modal
+    $("#loading-modal").
+    css("opacity", "1");
+}
+
+function stopLoadingAfterError() {
+    //make form container visible
+    $("#form-container")
+    .css(
+        {"-webkit-filter":"none", 
+        "-moz-filter":"none", 
+        "-o-filter":"none", 
+        "-ms-filter":"none", 
+        "filter":"none", 
+        "pointer-events":"auto"}
+    );
+    //hide loading modal
+    $("#loading-modal").
+    css("opacity", "0");
+
+    showErrorBar("Error: There was a problem with your request.");
+    
+}
 function checkFormFilled() {
     var filled = true;
     if($("#website-input").val() === "" || !($("#depth-option").is(":checked") || $("#breadth-option").is(":checked"))) {
         filled = false;
-        if($("#required-bar").hasClass("error-found")) {
-            $("#required-bar").removeClass("error-found");
-            void document.getElementById("required-bar").offsetWidth;
-        }
-        $("#required-bar").toggleClass("error-found");
+        showErrorBar("Error: One or more required parameters is missing.")
     }
     return filled;
+}
+
+function showErrorBar(text) {
+    $("#error-text").text(text);
+    if($("#required-bar").hasClass("error-found")) {
+        $("#required-bar").removeClass("error-found");
+        void document.getElementById("required-bar").offsetWidth;
+    }
+    $("#required-bar").toggleClass("error-found");
 }
 
 function initD3() {
