@@ -41,6 +41,9 @@ crawlerApp.controller('contentController', function($scope, $location) {
                     if(keywordInput !== "") {
                         Cookies.set("keyword", keywordInput);
                     }
+                    else {
+                        Cookies.remove("keyword");
+                    }
                     graph = data;
                     $scope.$apply(function() {
                         $location.path( path );
