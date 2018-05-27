@@ -238,7 +238,7 @@ button#submit-button:focus {
 }
 
 #loading-modal {
-    opacity: 0;
+    display: none;
     position: fixed;
     border-radius: 10px;
     background-color: #E1E1E1;

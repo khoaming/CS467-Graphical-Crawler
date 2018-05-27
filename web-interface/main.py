@@ -1,9 +1,6 @@
-import crawler
 import os
 from flask import Flask, render_template, request, send_file, jsonify, redirect, url_for
-import requests
-from bs4 import BeautifulSoup
-from bs4.element import Comment
+import crawler
 
 TEMPLATE_DIR = os.path.abspath('templates')
 STATIC_DIR = os.path.abspath('static')
@@ -47,8 +44,8 @@ def process_options():
         options_data["keyword"] = None
 
     try:
-        crawlerObj = crawler.Crawler(options_data)
-        result = crawlerObj.start()
+        crawler_obj = crawler.Crawler(options_data)
+        result = crawler_obj.start()
     except ValueError:
         #invalid url
         return 'Invalid URL provided', 400
