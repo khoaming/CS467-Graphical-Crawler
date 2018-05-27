@@ -4,14 +4,14 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 from collections import deque
 
-def tag_visible(element):
+def tagVisible(element):
     if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]', 'p']:
         return False
     if isinstance(element, Comment):
         return False
     return True
 
-def validateUrl(url):
+def prependHttp(url):
     if not url.startswith('http'):
         url = 'http://' + url
     return url
@@ -22,9 +22,15 @@ def tryUrl(url):
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
         }
         page = requests.get(url, headers=headers)
-        #check for valid domain
-        page.raise_for_status()
-        return page.content
+        # #check for valid domain
+        # page.raise_for_status()
+        # try:
+        #     soup = BeautifulSoup(page.content, "lxml")
+        #     return soup
+        # except:
+        #     pass
+        soup = BeautifulSoup(page.text, "lxml")
+        return soup
     except: # skip unreadable urls
         pass
     # except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as e:
@@ -41,7 +47,7 @@ class Node:
 class Crawler:
 
     def __init__(self, options_data):
-        self.startUrl = validateUrl(options_data.get('website'))
+        self.startUrl = prependHttp(options_data.get('website'))
         self.mode = options_data.get('traversal')
         self.steps = options_data.get('steps')
         self.keyWord = options_data.get('keyword')
@@ -73,18 +79,15 @@ class Crawler:
 
             if cur.depth == self.steps: return
 
-            url = validateUrl(cur.url)
-            content = tryUrl(url)
-            try:
-                soup = BeautifulSoup(content, "lxml")
-            except:
-                pass # skip unreadable urls
+            url = prependHttp(cur.url)
+            soup = tryUrl(url)
 
             if self.keyWord and self.foundKeyWord(cur, soup): return
 
             links = soup.findAll("a")
             self.visited.append(cur.url)
 
+            # crawl all unvisited links
             for link in links:
                 if link.get('href') and link.get('href').startswith('http'):
                     title = link.string
@@ -99,12 +102,10 @@ class Crawler:
 
             if cur.depth == self.steps: return
 
-            url = validateUrl(cur.url)
-            content = tryUrl(url)
-            try:
-                soup = BeautifulSoup(content, "lxml")
-            except:
-                pass # skip unreadable urls
+            url = prependHttp(cur.url)
+            soup = tryUrl(url)
+
+            if self.keyWord and self.foundKeyWord(cur, soup): return
 
             links = soup.findAll("a")
             self.visited.append(cur.url)
@@ -125,7 +126,7 @@ class Crawler:
 
     def foundKeyWord(self, cur, soup):
         texts = soup.findAll(text=True)
-        visible_texts = filter(tag_visible, texts)
+        visible_texts = filter(tagVisible, texts)
 
         for t in visible_texts:
             if self.keyWord in t.strip():

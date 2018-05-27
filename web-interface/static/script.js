@@ -88,8 +88,8 @@ function initiateLoading() {
     );
 
     //show loading modal
-    $("#loading-modal").
-    css("opacity", "1");
+    $("#loading-modal")
+    .css("display", "block");
 }
 
 function stopLoadingAfterError() {
@@ -161,7 +161,6 @@ function initD3() {
         .append("div")
         .attr('class', 'tooltip');
 
-
     var keyword_node = graph.keyword_node;
 
     var nodes = graph.nodes,
@@ -214,6 +213,7 @@ function initD3() {
         })
 
         .on("dblclick", function(d) {
+            console.log(d.url);
             window.open(
                 d.url,
                 '_blank'
