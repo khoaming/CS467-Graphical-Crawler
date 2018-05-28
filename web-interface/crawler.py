@@ -3,6 +3,8 @@ import requests
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 from collections import deque
+import multiprocessing, os
+from invoke import run
 
 def tagVisible(element):
     if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]', 'p']:
@@ -15,17 +17,6 @@ def prependHttp(url):
     if not url.startswith('http'):
         url = 'http://' + url
     return url
-
-def tryUrl(url):
-    try:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
-        }
-        page = requests.get(url, headers=headers)
-        soup = BeautifulSoup(page.text, "lxml")
-        return soup
-    except: # skip unreadable urls
-        pass
 
 class Node:
 
@@ -42,7 +33,7 @@ class Crawler:
         self.mode = options_data.get('traversal')
         self.steps = options_data.get('steps')
         self.keyWord = options_data.get('keyword')
-        self.toCrawl = deque([])
+        self.toCrawl = multiprocessing.Queue()
         self.result = {'nodes': [], 'links': []}
         self.visited = []
         self.numNodes = 0
@@ -53,30 +44,39 @@ class Crawler:
         print(self.steps)
         print(self.keyWord)
 
+        os.environ["OBJC_DISABLE_INITIALIZE_FORK_SAFETY"] = "YES"
+        run("echo $OBJC_DISABLE_INITIALIZE_FORK_SAFETY")
         startNode = Node(self.numNodes, 'Start', self.startUrl, 0)
         self.appendNode(startNode, startNode)
 
         if self.mode == 'breadth':
-            self.bfs()
+            p = multiprocessing.Process(target=self.bfs, args=(self.toCrawl,))
+            p.start()
+            p.join()
+            # self.bfs()
         if self.mode == 'depth':
             self.dfs()
 
         print (self.result)
         return (self.result)
 
-    def bfs(self):
-        while len(self.toCrawl) > 0:
-            cur = self.toCrawl.popleft()
+    def bfs(self, q):
+        while not q.empty():
+            cur = q.get()
+            print("cur: " + cur.url)
 
             if cur.depth == self.steps: return
 
             url = prependHttp(cur.url)
-            soup = tryUrl(url)
+            soup = self.tryUrl(url)
+            print("depth: " + str(cur.depth))
 
             if self.keyWord and self.foundKeyWord(cur, soup): return
+            print("cur: " + cur.url)
 
             links = soup.findAll("a", href=True)
             self.visited.append(cur.url)
+            print("links: " + links)
 
             # crawl all unvisited links
             for link in links:
@@ -129,7 +129,7 @@ class Crawler:
 
     def appendNode(self, parentNode, childNode):
         self.numNodes += 1
-        self.toCrawl.append(childNode)
+        self.toCrawl.put(childNode)
 
         title = childNode.title if childNode.title else 'No Title'
         self.result['nodes'].append({
@@ -146,3 +146,24 @@ class Crawler:
                 'distance': childNode.depth - parentNode.depth
             })
 
+    def tryUrl(self, url):
+        try:
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
+            }
+            print("HEADER")
+            page = requests.get(url, headers=headers)
+            # #check for valid domain
+            # page.raise_for_status()
+            # try:
+            #     soup = BeautifulSoup(page.content, "lxml")
+            #     return soup
+            # except:
+            #     pass
+            print("PAGE")
+            soup = BeautifulSoup(page.text, "lxml")
+            return soup
+        except: # skip unreadable urls
+            pass
+        # except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as e:
+        #     raise ValueError
