@@ -38,9 +38,8 @@ crawlerApp.controller('contentController', function($scope, $location) {
                     Cookies.set("website", websiteInput);
                     Cookies.set("traversal", traversalInput);
                     Cookies.set("steps", stepsInput);
-                    if(keywordInput !== "") {
-                        Cookies.set("keyword", keywordInput);
-                    }
+                    Cookies.set("keyword", keywordInput);
+
                     graph = data;
                     $scope.$apply(function() {
                         $location.path( path );
@@ -104,8 +103,8 @@ function stopLoadingAfterError() {
         "pointer-events":"auto"}
     );
     //hide loading modal
-    $("#loading-modal").
-    css("opacity", "0");
+    $("#loading-modal")
+    .css("display", "none");
 }
 
 function checkFormFilled() {
