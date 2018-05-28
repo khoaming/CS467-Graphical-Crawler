@@ -44,6 +44,7 @@ crawlerApp.controller('contentController', function($scope, $location) {
                     else {
                         Cookies.remove("keyword");
                     }
+
                     graph = data;
                     $scope.$apply(function() {
                         $location.path( path );
@@ -107,8 +108,8 @@ function stopLoadingAfterError() {
         "pointer-events":"auto"}
     );
     //hide loading modal
-    $("#loading-modal").
-    css("opacity", "0");
+    $("#loading-modal")
+    .css("display", "none");
 }
 
 function checkFormFilled() {

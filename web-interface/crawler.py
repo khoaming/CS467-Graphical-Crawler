@@ -22,19 +22,10 @@ def tryUrl(url):
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
         }
         page = requests.get(url, headers=headers)
-        # #check for valid domain
-        # page.raise_for_status()
-        # try:
-        #     soup = BeautifulSoup(page.content, "lxml")
-        #     return soup
-        # except:
-        #     pass
         soup = BeautifulSoup(page.text, "lxml")
         return soup
     except: # skip unreadable urls
         pass
-    # except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError) as e:
-    #     raise ValueError
 
 class Node:
 
@@ -84,7 +75,7 @@ class Crawler:
 
             if self.keyWord and self.foundKeyWord(cur, soup): return
 
-            links = soup.findAll("a")
+            links = soup.findAll("a", href=True)
             self.visited.append(cur.url)
 
             # crawl all unvisited links
@@ -107,13 +98,15 @@ class Crawler:
 
             if self.keyWord and self.foundKeyWord(cur, soup): return
 
-            links = soup.findAll("a")
+            links = soup.findAll("a", href=True)
             self.visited.append(cur.url)
 
             gotLink = False
 
             # find a random link that has not been visited and crawl it
             while not gotLink:
+                if not len(links): # in case there is no link
+                    break
                 i = random.randint(0, len(links) - 1)
                 link = links[i]
                 if link.get('href') and link.get('href').startswith('http'):

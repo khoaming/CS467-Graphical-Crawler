@@ -239,17 +239,8 @@ button#submit-button:focus {
 
 #loading-modal {
     display: none;
-    position: fixed;
-    border-radius: 10px;
-    background-color: #E1E1E1;
-    border: 2px solid black;
-    width: 300px;
-    height: 100px;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    box-shadow: 1px 1px 10px black;
-    text-align: center;
 }
 
 .loading-text {
