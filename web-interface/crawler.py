@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 from collections import deque
-import multiprocessing, os
+import multiprocessing, os, sys
 from invoke import run
 
 def tagVisible(element):
@@ -20,11 +20,13 @@ def prependHttp(url):
 
 class Node:
 
-    def __init__(self, id, title, url, depth):
+    def __init__(self, id, title, url, depth, parent=None):
+        parent = parent or None
         self.id = id
         self.title = title
         self.url = url
         self.depth = depth
+        self.parent = parent
 
 class Crawler:
 
@@ -33,7 +35,7 @@ class Crawler:
         self.mode = options_data.get('traversal')
         self.steps = options_data.get('steps')
         self.keyWord = options_data.get('keyword')
-        self.toCrawl = multiprocessing.Queue()
+        self.toCrawl = []
         self.result = {'nodes': [], 'links': []}
         self.visited = []
         self.numNodes = 0
@@ -48,22 +50,38 @@ class Crawler:
         run("echo $OBJC_DISABLE_INITIALIZE_FORK_SAFETY")
         startNode = Node(self.numNodes, 'Start', self.startUrl, 0)
         self.appendNode(startNode, startNode)
+        print("num: " + str(self.numNodes))
 
         if self.mode == 'breadth':
-            p = multiprocessing.Process(target=self.bfs, args=(self.toCrawl,))
-            p.start()
-            p.join()
-            # self.bfs()
+            print("HERE: A")
+            # print("empty: " + str(self.toCrawl.empty()))
+            while len (self.toCrawl) > 0:
+                print("HERE: B")
+                sys.setrecursionlimit(1000000)
+                q = multiprocessing.Queue()
+                p = multiprocessing.Process(target=self.bfs, args=(self.toCrawl, q))
+                print("HERE C")
+                p.start()
+                print("HERE D")
+                self.toCrawl.clear()
+                print("HERE E")
+                p.join()
+                print("HERE F")
+                while q.empty() is False:
+                    node = q.get_nowait()
+                    self.appendNode(node.parent, node)
+                print("HERE G")
+
         if self.mode == 'depth':
             self.dfs()
 
         print (self.result)
         return (self.result)
 
-    def bfs(self, q):
-        while not q.empty():
-            cur = q.get()
-            print("cur: " + cur.url)
+    def bfs(self, nodesToCrawl, q):
+        # cur = q.get_nowait()
+        for cur in nodesToCrawl:
+            print("cur1: " + cur.url)
 
             if cur.depth == self.steps: return
 
@@ -72,20 +90,21 @@ class Crawler:
             print("depth: " + str(cur.depth))
 
             if self.keyWord and self.foundKeyWord(cur, soup): return
-            print("cur: " + cur.url)
+            print("cur2: " + cur.url)
 
             links = soup.findAll("a", href=True)
             self.visited.append(cur.url)
-            print("links: " + links)
 
             # crawl all unvisited links
             for link in links:
                 if link.get('href') and link.get('href').startswith('http'):
+                    print("cur3: " + link['href'])
                     title = link.string
                     url = link['href']
                     if url not in self.visited:
-                        childNode = Node(self.numNodes, title, url, cur.depth + 1)
-                        self.appendNode(cur, childNode)
+                        childNode = Node(self.numNodes, title, url, cur.depth + 1, cur)
+                        q.put_nowait(childNode)
+                        # self.appendNode(cur, childNode)
 
     def dfs(self):
         while len(self.toCrawl) > 0:
@@ -129,7 +148,7 @@ class Crawler:
 
     def appendNode(self, parentNode, childNode):
         self.numNodes += 1
-        self.toCrawl.put(childNode)
+        self.toCrawl.append(childNode)
 
         title = childNode.title if childNode.title else 'No Title'
         self.result['nodes'].append({
