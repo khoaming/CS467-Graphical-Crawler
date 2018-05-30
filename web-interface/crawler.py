@@ -59,18 +59,26 @@ class Crawler:
                 print("HERE: B")
                 sys.setrecursionlimit(1000000)
                 q = multiprocessing.Queue()
-                p = multiprocessing.Process(target=self.bfs, args=(self.toCrawl, q))
+                v = multiprocessing.Value('i', self.numNodes)
+                s = multiprocessing.Value('i', self.steps)
+                p = multiprocessing.Process(target=self.bfs, args=(self.toCrawl, q, v, s))
                 print("HERE C")
                 p.start()
                 print("HERE D")
                 self.toCrawl.clear()
-                print("HERE E")
-                p.join()
-                print("HERE F")
-                while q.empty() is False:
-                    node = q.get_nowait()
+                print("HERE E " + str(q.empty()))
+                while True:
+                    node = q.get()
+                    if node is None:
+                        break
+                    print("get node: " + node.url)
                     self.appendNode(node.parent, node)
                 print("HERE G")
+                print(self.toCrawl)
+                p.join()
+                self.numNodes = v.value
+                print("HERE F")
+        print("HERE DONE")
 
         if self.mode == 'depth':
             self.dfs()
@@ -78,12 +86,14 @@ class Crawler:
         print (self.result)
         return (self.result)
 
-    def bfs(self, nodesToCrawl, q):
+    def bfs(self, nodesToCrawl, q, v, s):
         # cur = q.get_nowait()
         for cur in nodesToCrawl:
             print("cur1: " + cur.url)
 
-            if cur.depth == self.steps: return
+            if cur.depth == s.value:
+                q.put(None)
+                return
 
             url = prependHttp(cur.url)
             soup = self.tryUrl(url)
@@ -98,13 +108,16 @@ class Crawler:
             # crawl all unvisited links
             for link in links:
                 if link.get('href') and link.get('href').startswith('http'):
-                    print("cur3: " + link['href'])
                     title = link.string
                     url = link['href']
                     if url not in self.visited:
-                        childNode = Node(self.numNodes, title, url, cur.depth + 1, cur)
-                        q.put_nowait(childNode)
+                        childNode = Node(v.value, title, url, cur.depth + 1, cur)
+                        v.value = v.value + 1
+                        q.put(childNode)
+                        print("put: " + childNode.url)
                         # self.appendNode(cur, childNode)
+        q.put(None)
+        print("bfs done")
 
     def dfs(self):
         while len(self.toCrawl) > 0:
