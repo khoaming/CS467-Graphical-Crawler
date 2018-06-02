@@ -18,35 +18,42 @@
         <h2>Traversal type <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
         <ul class="input">
             <li class="trav-option">
-                <input type="radio" name="traversal" id="depth-option" ng-model="traversal" value="depth" required>
+                <input type="radio" name="traversal" id="depth-option" ng-model="traversal" value="depth" required onchange=radioSelection()>
                 <span class="radio-button"></span>
                 <label for="depth-option">Depth-first</label>
             </li>
             <li class="trav-option">
-                <input type="radio" name="traversal" id="breadth-option" ng-model="traversal" value="breadth">
+                <input type="radio" name="traversal" id="breadth-option" ng-model="traversal" value="breadth" onchange=radioSelection()>
                 <span class="radio-button"></span>
                 <label for="breadth-option">Breadth-first</label>
             </li>
         </ul>
     </div>
 
-    <div class="option">    
+    <div class="option">
         <h2>Number of steps <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
-        <span class="input" id="range-slider">
-            <input type="range" min="1" max="5" ng-value="steps" class="slider" name="steps" id="steps-input">
-            <ul id="slider-labels">
-            <li class="slider-label">1
-            <li class="slider-label">2
-            <li class="slider-label">3
-            <li class="slider-label">4
-            <li class="slider-label">5
+        <span class="input" id="range-slider-dfs">
+            <input type="range" min="1" max="5" ng-value="steps" class="slider" name="steps" id="steps-input-dfs">
+            <ul id="slider-labels-dfs">
+            <li class="slider-label-dfs">1
+            <li class="slider-label-dfs">2
+            <li class="slider-label-dfs">3
+            <li class="slider-label-dfs">4
+            <li class="slider-label-dfs">5
+            </ul>
+        </span>
+        <span class="input" id="range-slider-bfs">
+            <input type="range" min="1" max="2" ng-value="steps" class="slider" name="steps" id="steps-input-bfs">
+            <ul id="slider-labels-bfs">
+            <li class="slider-label-bfs">1
+            <li class="slider-label-bfs">2
             </ul>
         </span>
     </div>
-    
+
     <div class="option">
         <h2>Keyword (optional)</h2>
-        <span class="input">        
+        <span class="input">
             <input type="text" id="keyword-input" name="keyword" ng-value="keyword">
         </span>
     </div>
