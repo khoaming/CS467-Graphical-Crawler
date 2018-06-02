@@ -59,9 +59,10 @@ class Crawler:
                 print("HERE: B")
                 sys.setrecursionlimit(1000000)
                 q = multiprocessing.Queue()
+                l = multiprocessing.Lock()
                 v = multiprocessing.Value('i', self.numNodes)
                 s = multiprocessing.Value('i', self.steps)
-                p = multiprocessing.Process(target=self.bfs, args=(self.toCrawl, q, v, s))
+                p = multiprocessing.Process(target=self.bfs, args=(self.toCrawl, q, l, v, s))
                 print("HERE C")
                 p.start()
                 print("HERE D")
@@ -86,8 +87,9 @@ class Crawler:
         print (self.result)
         return (self.result)
 
-    def bfs(self, nodesToCrawl, q, v, s):
+    def bfs(self, nodesToCrawl, q, l, v, s):
         # cur = q.get_nowait()
+        l.acquire()
         for cur in nodesToCrawl:
             print("cur1: " + cur.url)
 
@@ -117,6 +119,7 @@ class Crawler:
                         print("put: " + childNode.url)
                         # self.appendNode(cur, childNode)
         q.put(None)
+        l.release()
         print("bfs done")
 
     def dfs(self):
