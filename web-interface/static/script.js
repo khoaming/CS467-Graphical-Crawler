@@ -19,7 +19,6 @@ crawlerApp.controller('contentController', function($scope, $location) {
     $scope.website = Cookies.get("website");
     $scope.traversal = Cookies.get("traversal");
     $scope.steps = Cookies.get("steps");
-    radioSelection($scope.traversal);
     if(angular.isUndefined($scope.steps)) {
         $scope.steps = 3;
     }
@@ -68,6 +67,7 @@ crawlerApp.controller('contentController', function($scope, $location) {
             });
         }
     };
+    radioSelection($scope.traversal, $scope.steps);
 });
 
 crawlerApp.directive("graph", function() {
@@ -293,7 +293,7 @@ function initD3() {
 
 }
 
-function radioSelection(traversal) {
+function radioSelection(traversal, steps) {
   var radioValue = $("input[name='traversal']:checked").val() || traversal;
   console.log("radio: " + radioValue);
   console.log("cookie: " + traversal);
@@ -302,11 +302,23 @@ function radioSelection(traversal) {
     $("#steps-input-dfs").prop( "disabled", false );
     $('#range-slider-bfs').hide();
     $("#steps-input-bfs").prop( "disabled", true );
+    $("#steps-input-dfs").on("input", function(e) {
+      $("#stepValue").text( $(e.target).val() )
+      console.log($(e.target));
+    });
+    $("#steps-input-dfs").trigger("input");
+    $("#stepValue").val(steps);
   } else if (radioValue === 'breadth') {
     $('#range-slider-dfs').hide();
     $("#steps-input-dfs").prop( "disabled", true );
     $('#range-slider-bfs').show();
     $("#steps-input-bfs").prop( "disabled", false );
+    $("#steps-input-bfs").on("input", function(e) {
+      $("#stepValue").text( $(e.target).val() )
+      console.log($(e.target).val());
+    });
+    $("#steps-input-bfs").trigger("input");
+    $("#stepValue").val(steps);
   }
 }
 
