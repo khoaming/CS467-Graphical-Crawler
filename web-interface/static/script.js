@@ -303,14 +303,14 @@ function radioSelection(traversal) {
   console.log("radio: " + radioValue);
   console.log("cookie: " + traversal);
   if (radioValue === 'depth') {
-    $('#range-slider-dfs').show();
+    $('#steps-dfs').show();
     $("#steps-input-dfs").prop( "disabled", false );
-    $('#range-slider-bfs').hide();
+    $('#steps-bfs').hide();
     $("#steps-input-bfs").prop( "disabled", true );
-  } else if (radioValue === 'breadth') {
-    $('#range-slider-dfs').hide();
+  } else {
+    $('#steps-dfs').hide();
     $("#steps-input-dfs").prop( "disabled", true );
-    $('#range-slider-bfs').show();
+    $('#steps-bfs').show();
     $("#steps-input-bfs").prop( "disabled", false );
   }
 }
