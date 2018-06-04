@@ -19,6 +19,7 @@ crawlerApp.controller('contentController', function($scope, $location) {
     $scope.website = Cookies.get("website");
     $scope.traversal = Cookies.get("traversal");
     $scope.steps = Cookies.get("steps");
+    radioSelection($scope.traversal);
     if(angular.isUndefined($scope.steps)) {
         $scope.steps = 3;
     }
@@ -29,6 +30,14 @@ crawlerApp.controller('contentController', function($scope, $location) {
             var traversalInput = $("input[name=traversal]:checked").val();
             var stepsInput = $("#steps-input").val();
             var keywordInput = $("#keyword-input").val();
+            if (traversalInput === 'depth') {
+                stepsInput = $("#steps-input-dfs").val();
+                console.log("DFS:" + stepsInput);
+            }
+            else if (traversalInput === 'breadth') {
+                stepsInput = $("#steps-input-bfs").val();
+                console.log("BFS:" + stepsInput);
+            }
             initiateLoading();
             $.ajax({
                 type: "POST",
@@ -83,11 +92,11 @@ function initiateLoading() {
     //blur form and make unclickable
     $("#form-container")
     .css(
-        {"-webkit-filter":"blur(3px)", 
-        "-moz-filter":"blur(3px)", 
-        "-o-filter":"blur(3px)", 
-        "-ms-filter":"blur(3px)", 
-        "filter":"blur(3px)", 
+        {"-webkit-filter":"blur(3px)",
+        "-moz-filter":"blur(3px)",
+        "-o-filter":"blur(3px)",
+        "-ms-filter":"blur(3px)",
+        "filter":"blur(3px)",
         "pointer-events":"none"}
     );
 
@@ -100,11 +109,11 @@ function stopLoadingAfterError() {
     //make form container visible
     $("#form-container")
     .css(
-        {"-webkit-filter":"none", 
-        "-moz-filter":"none", 
-        "-o-filter":"none", 
-        "-ms-filter":"none", 
-        "filter":"none", 
+        {"-webkit-filter":"none",
+        "-moz-filter":"none",
+        "-o-filter":"none",
+        "-ms-filter":"none",
+        "filter":"none",
         "pointer-events":"auto"}
     );
     //hide loading modal
@@ -260,31 +269,53 @@ function initD3() {
             + " S" + d[1].x + "," + d[1].y
             + " " + d[2].x + "," + d[2].y;
     }
-    
+
     function positionNode(d) {
         return "translate(" + d.x + "," + d.y + ")";
     }
-    
+
     function dragstarted(d) {
         if (!d3.event.active) simulation.alphaTarget(0.3).restart();
         d.fx = d.x;
         d.fy = d.y;
     }
-    
+
     function dragged(d) {
         tooltip.style("visibility", "hidden"); // hide while dragging a node
         d.fx = d3.event.x;
         d.fy = d3.event.y;
     }
-    
+
     function dragended(d) {
         if (!d3.event.active) simulation.alphaTarget(0);
         d.fx = null;
         d.fy = null;
     }
-    
+
     function zoomed() {
         everything.attr("transform", d3.event.transform);
     }
 
 }
+
+function radioSelection(traversal) {
+  var radioValue = $("input[name='traversal']:checked").val() || traversal;
+  console.log("radio: " + radioValue);
+  console.log("cookie: " + traversal);
+  if (radioValue === 'depth') {
+    $('#range-slider-dfs').show();
+    $("#steps-input-dfs").prop( "disabled", false );
+    $('#range-slider-bfs').hide();
+    $("#steps-input-bfs").prop( "disabled", true );
+  } else if (radioValue === 'breadth') {
+    $('#range-slider-dfs').hide();
+    $("#steps-input-dfs").prop( "disabled", true );
+    $('#range-slider-bfs').show();
+    $("#steps-input-bfs").prop( "disabled", false );
+  }
+}
+
+$( document ).ready(function() {
+    console.log( "ready!" );
+    radioSelection();
+});
