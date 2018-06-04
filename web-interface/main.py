@@ -34,7 +34,10 @@ def process_options():
     #validate step number
     try:
         options_data["steps"] = int(request.form.get("steps"))
-        if options_data["steps"] > 5 or options_data["steps"] < 1:
+        
+        if options_data["traversal"] == "depth" and (options_data["steps"] > 10 or options_data["steps"] < 1):
+            return 'Steps out of range', 400
+        elif options_data["traversal"] == "breadth" and (options_data["steps"] > 3 or options_data["steps"] < 1):
             return 'Steps out of range', 400
     except ValueError:
         return 'Steps is not a valid value', 400
