@@ -147,7 +147,8 @@ function initD3() {
 
     var svg = d3.select("#results-pane").append("svg")
         .attr("width", $("#results-pane").width())
-        .attr("height", $("#results-pane").height());
+        .attr("height", $("#results-pane").height())
+        .call(zoom); // add zoom
 
     var width = svg.attr("width");
     var height = svg.attr("height");
@@ -155,10 +156,6 @@ function initD3() {
     // add encompassing group for zooming
     var everything = svg.append("g")
         .attr("class", "everything");
-
-    svg
-        .call(zoom) // add zoom
-        .call(zoom.transform, d3.zoomIdentity.translate(140, 120).scale(0.6)); // apply initial zoom
 
     var simulation = d3.forceSimulation()
         // pull nodes together based on the links between them
@@ -262,6 +259,7 @@ function initD3() {
     function ticked() {
         link.attr("d", positionLink);
         node.attr("transform", positionNode);
+        zoomToFit(); // TODO put it where it can run after the whole graph has been plotted
     }
 
     function positionLink(d) {
@@ -296,6 +294,32 @@ function initD3() {
         everything.attr("transform", d3.event.transform);
     }
 
+    function zoomToFit() {
+        // var bbox = everything.node().getBBox();
+        var bounds = everything.node().getBBox();
+        var parent = everything.node().parentElement;
+        var fullWidth = 900; //parent.clientWidth,
+            fullHeight = 800; //parent.clientHeight;
+        var width = bounds.width,
+            height = bounds.height;
+        var midX = bounds.x + width / 2,
+            midY = bounds.y + height / 2;
+        if (width == 0 || height == 0) return; // nothing to fit
+        var scale = (0.8) / Math.max(width / fullWidth, height / fullHeight);
+        console.log(bounds);
+        console.log(scale, width, fullWidth, height, fullHeight);
+        var translateX = fullWidth / 2 - scale * midX;
+        var translateY = fullHeight / 2 - scale * midY;
+        var translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
+
+        // console.trace("zoomFit", translate, scale);
+        svg
+            // .transition()
+            // .duration(0) // milliseconds
+            // .call(zoom.translate(translate).scale(scale).event);
+            .call(zoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(scale)); // apply initial zoom
+    }
+    // zoomToFit();
 }
 
 function radioSelection(traversal) {
