@@ -1,4 +1,3 @@
-//https://scotch.io/tutorials/single-page-apps-with-angularjs-routing-and-templating
 var crawlerApp = angular.module('crawlerApp', ['ngRoute', 'ngAnimate']);
 var graph = {};
 crawlerApp.config(function($routeProvider, $locationProvider) {
@@ -161,11 +160,13 @@ function initD3() {
         // pull nodes together based on the links between them
         .force("link", d3.forceLink().id(function(d) {return d.id;}).strength(0.3))
         // push nodes apart to space them out
-        .force("charge", d3.forceManyBody().strength(-120))
+        .force("charge", d3.forceManyBody().strength(-200))
         // add some collision detection so they don't overlap
         .force("collide", d3.forceCollide().radius(20))
         // and draw them around the centre of the space
-        .force("center", d3.forceCenter(width / 2, height / 2));
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        // control how fast the force decays
+        .alphaDecay(0.04);
 
     var tooltip = d3.select("body")
         .append("div")
@@ -191,24 +192,19 @@ function initD3() {
         .data(bilinks)
         .enter().append("path")
         .attr("class", "link")
-        // random color based on depth
-        .style("stroke", function(d) {return (d[0].id === 0) ? "black": "hsl(" + (360 * random + 60 * d[0].depth) + ",80%,40%)"});
-        // pure random color
-        // .style("stroke", function(d) {return (d[0].id === 0) ? "gray": "hsl(" + (360 * Math.random()) + ",80%,60%)"});
+        .style("stroke", function(d) {return (d[0].id === 0) ? "gray": "hsl(" + (360 * random + 60 * d[0].depth) + ",80%,40%)"});
+
     var node = everything.selectAll(".node")
         .data(nodes.filter(function(d) {return d.depth + 1; })) // to filter out intermediate nodes
         .enter().append("circle")
         .attr("class", "node")
         .attr("r", 8)
-        // random color based on depth
-        .attr("fill", function(d) { return (d.id === 0) ? "gray" : "hsl(" + (360 * random + 60 * d.depth) + ",80%,80%)"})
-        // pure random color
-        // .attr("fill", function(d) { return (d.id === 0) ? "gray" : "hsl(" + (360 * Math.random()) + ",80%,60%)"})
+        .attr("fill", function(d) { return (d.id === 0) ? "silver" : "hsl(" + (360 * random + 60 * d.depth) + ",80%,80%)"})
         .attr("stroke", function(d) {
             if (d.id === keyword_node) {
                 return "red";
             } else if (d.id === 0) {
-                return "black";
+                return "gray";
             } else {
                 return "hsl(" + (360 * random + 60 * d.depth) + ",80%,40%)";
             }})
@@ -232,7 +228,6 @@ function initD3() {
 
         .on("mouseover", function(d) {
             d3.select(this).attr("r", 12);
-            // d3.select(this).style('stroke', 'lightgreen');
             return tooltip.style("visibility", "visible").text(d.title);
         })
 
@@ -243,15 +238,17 @@ function initD3() {
         })
 
         // hide tooltip on "mouseout"
-        .on("mouseout", function(d) {
+        .on("mouseout", function() {
             d3.select(this).attr("r", 8);
-            // d3.select(this).style('stroke', (d.id == 0) ? "red" : "silver");
             return tooltip.style("visibility", "hidden");
         });
 
+    var initialZoomDone = false;
+
     simulation
         .nodes(nodes)
-        .on("tick", ticked);
+        .on("tick", ticked)
+        .on("end", function() {initialZoomDone = true;});
 
     simulation.force("link")
         .links(links);
@@ -259,7 +256,9 @@ function initD3() {
     function ticked() {
         link.attr("d", positionLink);
         node.attr("transform", positionNode);
-        zoomToFit(); // TODO put it where it can run after the whole graph has been plotted
+        if (!initialZoomDone) {
+            zoomToFit();
+        }
     }
 
     function positionLink(d) {
@@ -295,31 +294,21 @@ function initD3() {
     }
 
     function zoomToFit() {
-        // var bbox = everything.node().getBBox();
         var bounds = everything.node().getBBox();
         var parent = everything.node().parentElement;
-        var fullWidth = 900; //parent.clientWidth,
-            fullHeight = 800; //parent.clientHeight;
+        var fullWidth = parent.clientWidth,
+            fullHeight = parent.clientHeight;
         var width = bounds.width,
             height = bounds.height;
         var midX = bounds.x + width / 2,
             midY = bounds.y + height / 2;
         if (width == 0 || height == 0) return; // nothing to fit
         var scale = (0.8) / Math.max(width / fullWidth, height / fullHeight);
-        console.log(bounds);
-        console.log(scale, width, fullWidth, height, fullHeight);
         var translateX = fullWidth / 2 - scale * midX;
         var translateY = fullHeight / 2 - scale * midY;
-        var translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
 
-        // console.trace("zoomFit", translate, scale);
-        svg
-            // .transition()
-            // .duration(0) // milliseconds
-            // .call(zoom.translate(translate).scale(scale).event);
-            .call(zoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(scale)); // apply initial zoom
+        svg.call(zoom.transform, d3.zoomIdentity.translate(translateX, translateY).scale(scale));
     }
-    // zoomToFit();
 }
 
 function radioSelection(traversal) {
