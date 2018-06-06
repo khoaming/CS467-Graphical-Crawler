@@ -303,7 +303,7 @@ function initD3() {
         var midX = bounds.x + width / 2,
             midY = bounds.y + height / 2;
         if (width == 0 || height == 0) return; // nothing to fit
-        var scale = (0.8) / Math.max(width / fullWidth, height / fullHeight);
+        var scale = Math.min(1, (0.95 / Math.max(width / fullWidth, height / fullHeight)));
         var translateX = fullWidth / 2 - scale * midX;
         var translateY = fullHeight / 2 - scale * midY;
 
