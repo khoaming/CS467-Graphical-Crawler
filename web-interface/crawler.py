@@ -122,7 +122,8 @@ class Crawler:
         visible_texts = filter(tagVisible, texts)
 
         for t in visible_texts:
-            if self.keyWord in t.strip():
+            if self.keyWord.lower() in t.strip().lower():
+            # if self.keyWord in t.strip():
                 self.result['keyword_node'] = cur.id
                 return True
         return False
@@ -145,4 +146,3 @@ class Crawler:
                 'target': childNode.id,
                 'distance': childNode.depth - parentNode.depth
             })
-
