@@ -17,10 +17,14 @@ crawlerApp.config(function($routeProvider, $locationProvider) {
 crawlerApp.controller('contentController', function($scope, $location) {
     $scope.website = Cookies.get("website");
     $scope.traversal = Cookies.get("traversal");
-    $scope.steps = Cookies.get("steps");
+    $scope.stepsDepth = Cookies.get("stepsDepth");
+    $scope.stepsBreadth = Cookies.get("stepsBreadth");
     radioSelection($scope.traversal);
-    if(angular.isUndefined($scope.steps)) {
-        $scope.steps = 3;
+    if(angular.isUndefined($scope.stepsDepth)) {
+        $scope.stepsDepth = "5";
+    }
+    if(angular.isUndefined($scope.stepsBreadth)) {
+        $scope.stepsBreadth = "2";
     }
     $scope.keyword = Cookies.get("keyword");
     $scope.go = function ( path ) {
@@ -46,7 +50,12 @@ crawlerApp.controller('contentController', function($scope, $location) {
                 success: function(data) {
                     Cookies.set("website", websiteInput);
                     Cookies.set("traversal", traversalInput);
-                    Cookies.set("steps", stepsInput);
+                    if (traversalInput === 'depth') {
+                        Cookies.set("stepsDepth", stepsInput);
+                    }
+                    else if (traversalInput === 'breadth') {
+                        Cookies.set("stepsBreadth", stepsInput);
+                    }
                     if(keywordInput !== "") {
                         Cookies.set("keyword", keywordInput);
                     }
