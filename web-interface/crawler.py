@@ -101,7 +101,8 @@ class Crawler:
             self.visited.append(cur.url)
 
             gotLink = False
-
+            #remove all links without http
+            links = [link for link in links if link.get('href') and link.get('href').startswith('http')]
             # find a random link that has not been visited and crawl it
             while not gotLink:
                 if not len(links): # in case there is no link
