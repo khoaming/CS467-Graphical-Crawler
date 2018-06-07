@@ -254,3 +254,8 @@ button#submit-button:focus {
 .steps-select:focus {
     outline: none;
 }
+
+#form-container {
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
