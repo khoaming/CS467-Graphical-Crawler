@@ -5,7 +5,7 @@ from bs4.element import Comment
 from collections import deque
 
 def tagVisible(element):
-    if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]', 'p']:
+    if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]']:
         return False
     if isinstance(element, Comment):
         return False
@@ -123,7 +123,6 @@ class Crawler:
 
         for t in visible_texts:
             if self.keyWord.lower() in t.strip().lower():
-            # if self.keyWord in t.strip():
                 self.result['keyword_node'] = cur.id
                 return True
         return False

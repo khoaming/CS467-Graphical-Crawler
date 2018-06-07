@@ -192,21 +192,21 @@ function initD3() {
         .data(bilinks)
         .enter().append("path")
         .attr("class", "link")
-        .style("stroke", function(d) {return (d[0].id === 0) ? "gray": "hsl(" + (360 * random + 60 * d[0].depth) + ",80%,40%)"});
+        .style("stroke", function(d) {return (d[0].id === 0) ? "silver": "hsl(" + (360 * random + 60 * d[0].depth) + ",90%,40%)"});
 
     var node = everything.selectAll(".node")
         .data(nodes.filter(function(d) {return d.depth + 1; })) // to filter out intermediate nodes
         .enter().append("circle")
         .attr("class", "node")
         .attr("r", 8)
-        .attr("fill", function(d) { return (d.id === 0) ? "silver" : "hsl(" + (360 * random + 60 * d.depth) + ",80%,80%)"})
+        .attr("fill", function(d) { return (d.id === 0) ? "white" : "hsl(" + (360 * random + 60 * d.depth) + ",90%,80%)"})
         .attr("stroke", function(d) {
             if (d.id === keyword_node) {
                 return "red";
             } else if (d.id === 0) {
-                return "gray";
+                return "silver";
             } else {
-                return "hsl(" + (360 * random + 60 * d.depth) + ",80%,40%)";
+                return "hsl(" + (360 * random + 60 * d.depth) + ",90%,40%)";
             }})
         .attr("stroke-width", function(d) {return (d.id === keyword_node) ? "6px": "2px"})
         .call(d3.drag()
@@ -215,6 +215,8 @@ function initD3() {
             .on("end", dragended))
 
         .on("click", function(d) {
+            d.fx = null;
+            d.fy = null;
             tooltip.html('<a href="' + d.url + '">' + d.url + '</a>'); // show link
         })
 
@@ -228,19 +230,17 @@ function initD3() {
 
         .on("mouseover", function(d) {
             d3.select(this).attr("r", 12);
-            return tooltip.style("visibility", "visible").text(d.title);
+            tooltip.style("visibility", "visible").text(d.title);
         })
 
-        // https://stackoverflow.com/questions/10805184/show-data-on-mouseover-of-circle
         .on("mousemove", function() {
-            return tooltip.style("top", (d3.event.pageY - 30) + "px")
-                .style("left", d3.event.pageX + "px");
+            tooltip.style("top", (d3.event.pageY - 20) + "px")
+                   .style("left", (d3.event.pageX + 15) + "px");
         })
 
-        // hide tooltip on "mouseout"
         .on("mouseout", function() {
             d3.select(this).attr("r", 8);
-            return tooltip.style("visibility", "hidden");
+            tooltip.style("visibility", "hidden");
         });
 
     var initialZoomDone = false;
@@ -272,7 +272,7 @@ function initD3() {
     }
 
     function dragstarted(d) {
-        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+        if (!d3.event.active) simulation.alphaTarget(0.03).restart();
         d.fx = d.x;
         d.fy = d.y;
     }

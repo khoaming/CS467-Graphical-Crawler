@@ -1,21 +1,21 @@
 <div id="form-container">
 <header>
     <h1>OctoGraph</h1>
-    <p>Enter a <bold>website</bold> below and the crawler will generate a graph of the links expanding out from the starting point.</p>
-    <p>You must choose your <bold>traversal</bold> method and number of <bold>steps</bold> to take from the original URL.</p>
-    <p>You may also choose a <bold>keyword</bold>, which will terminate the crawling if it is found.</p>
+    <p>Our friendly OctoGraph loves to crawl websites and visualize results.</p>
+    <p>Just feed it some instructions below and it will be good to go!</p>
+    <p>Try giving it a keyword signal to return when found too!</p>
 </header>
 <div id="required-bar"><span id="error-text"></span></div>
 <form id="options-form">
     <div class="option">
-        <h2>Enter a starting website <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
+        <h2>Starting Website <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
         <span class="input">
-            <input type="text" name="website" id="website-input" ng-value="website" required>
+            <input type="text" name="website" id="website-input" ng-value="website" placeholder="Enter starting website" required>
         </span>
     </div>
 
     <div class="option">
-        <h2>Traversal type <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
+        <h2>Traversal Type <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
         <ul class="input">
             <li class="trav-option">
                 <input type="radio" name="traversal" id="depth-option" ng-model="traversal" value="depth" required onchange=radioSelection()>
@@ -31,7 +31,7 @@
     </div>
 
     <div class="option">
-        <h2>Number of steps <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
+        <h2>Number of Steps <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
         <span class="input" id="steps-dfs">
             <select class="steps-select" id="steps-input-dfs" name="steps">
                 <option value="1">1</option>
@@ -50,15 +50,14 @@
             <select class="steps-select" id="steps-input-bfs" name="steps">
                 <option value="1">1</option>
                 <option value="2" selected="selected">2</option>
-                <option value="3">3</option>
             </select>
         </span>
     </div>
 
     <div class="option">
-        <h2>Keyword (optional)</h2>
+        <h2>Optional keyword signal</h2>
         <span class="input">
-            <input type="text" id="keyword-input" name="keyword" ng-value="keyword">
+            <input type="text" id="keyword-input" name="keyword" ng-value="keyword" placeholder="Enter optional single keyword">
         </span>
     </div>
 </form>
