@@ -92,10 +92,9 @@ class Crawler:
             cur = self.toCrawl.popleft()
 
             if cur.depth == self.steps: return
-
             url = prependHttp(cur.url)
             soup = tryUrl(url)
-
+            print(url, flush=True)
             if self.keyWord and self.foundKeyWord(cur, soup): return
 
             links = soup.findAll("a", href=True)

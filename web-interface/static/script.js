@@ -31,17 +31,18 @@ crawlerApp.controller('contentController', function($scope, $location) {
             var keywordInput = $("#keyword-input").val();
             if (traversalInput === 'depth') {
                 stepsInput = $("#steps-input-dfs").val();
-                console.log("DFS:" + stepsInput);
             }
             else if (traversalInput === 'breadth') {
                 stepsInput = $("#steps-input-bfs").val();
-                console.log("BFS:" + stepsInput);
             }
             initiateLoading();
+            //retry adapted from https://gist.github.com/rainyjune/4084886
             $.ajax({
                 type: "POST",
                 url: "process-options",
                 data: $("#options-form").serialize(),
+                tryCount: 0,
+                retryLimit: 3, 
                 success: function(data) {
                     Cookies.set("website", websiteInput);
                     Cookies.set("traversal", traversalInput);
@@ -67,6 +68,17 @@ crawlerApp.controller('contentController', function($scope, $location) {
                     500: function() {
                         stopLoadingAfterError();
                         showErrorBar("Unknown error. Please try again.");
+                    },
+                    502: function() {
+                        this.tryCount++;
+                        if(this.tryCount <= this.retryLimit) {
+                            $.ajax(this);
+                            return;
+                        }
+                        else {
+                            stopLoadingAfterError();
+                            showErrorBar("Unknown error. Please try again.");
+                        }
                     }
                 }
             });
@@ -78,11 +90,6 @@ crawlerApp.directive("graph", function() {
     return {
         link: function(scope, element, attrs) {
             initD3();
-            //redraw the element when the window is resized?
-            // window.addEventListener("resize", function() {
-            //     $("svg").remove();
-            //     initD3();
-            // });
         }
     }
 });
@@ -221,7 +228,6 @@ function initD3() {
         })
 
         .on("dblclick", function(d) {
-            console.log(d.url);
             window.open(
                 d.url,
                 '_blank'
@@ -313,8 +319,6 @@ function initD3() {
 
 function radioSelection(traversal) {
   var radioValue = $("input[name='traversal']:checked").val() || traversal;
-  console.log("radio: " + radioValue);
-  console.log("cookie: " + traversal);
   if (radioValue === 'depth') {
     $('#steps-dfs').show();
     $("#steps-input-dfs").prop( "disabled", false );
@@ -329,6 +333,5 @@ function radioSelection(traversal) {
 }
 
 $( document ).ready(function() {
-    console.log( "ready!" );
     radioSelection();
 });
