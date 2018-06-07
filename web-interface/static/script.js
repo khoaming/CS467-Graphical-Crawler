@@ -31,11 +31,9 @@ crawlerApp.controller('contentController', function($scope, $location) {
             var keywordInput = $("#keyword-input").val();
             if (traversalInput === 'depth') {
                 stepsInput = $("#steps-input-dfs").val();
-                console.log("DFS:" + stepsInput);
             }
             else if (traversalInput === 'breadth') {
                 stepsInput = $("#steps-input-bfs").val();
-                console.log("BFS:" + stepsInput);
             }
             initiateLoading();
             $.ajax({
@@ -313,8 +311,6 @@ function initD3() {
 
 function radioSelection(traversal) {
   var radioValue = $("input[name='traversal']:checked").val() || traversal;
-  console.log("radio: " + radioValue);
-  console.log("cookie: " + traversal);
   if (radioValue === 'depth') {
     $('#steps-dfs').show();
     $("#steps-input-dfs").prop( "disabled", false );
@@ -329,6 +325,5 @@ function radioSelection(traversal) {
 }
 
 $( document ).ready(function() {
-    console.log( "ready!" );
     radioSelection();
 });
