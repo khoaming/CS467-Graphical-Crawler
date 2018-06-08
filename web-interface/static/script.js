@@ -162,6 +162,7 @@ function initD3() {
         .scaleExtent([0.05, 5]);
 
     var svg = d3.select("#results-pane").append("svg")
+        .attr("class", "grabbable")
         .attr("width", $("#results-pane").width())
         .attr("height", $("#results-pane").height())
         .call(zoom); // add zoom
