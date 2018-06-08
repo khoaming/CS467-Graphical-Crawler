@@ -213,7 +213,7 @@ button#submit-button:focus {
     position: absolute;
     z-index: 10;
     visibility: hidden;
-    background-color: #2b6e67;;
+    background-color: #2b6e67;
     text-align: center;
     padding: 5px;
     border-radius: 5px;
@@ -239,14 +239,15 @@ button#submit-button:focus {
     height: 20px;
     top: -25px;
     left: 0;
-    background-color: #E1E1E1;
+    background-color: #e33d68;
     text-align: center;
     padding-top: 5px;
     opacity: 0;
 }
 
 #error-text {
-    color: #e33d68;
+    font-weight: bold;
+    color: white
 }
 /*https://stackoverflow.com/questions/1895476/how-to-style-a-select-dropdown-with-css-only-without-javascript*/
 .steps-select {
@@ -281,7 +282,7 @@ button#submit-button:focus {
 #form-container {
     position: absolute;
     margin: auto;
-    top: 50px;
+    top: 80px;
     right: 500px;
     bottom: 20px;
     left: 30px;
