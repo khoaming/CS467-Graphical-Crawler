@@ -75,7 +75,6 @@ label {
 }
 
 a {
-    font-weight: bold;
     color: #2b6e67;
     text-decoration: none;
 }
@@ -155,7 +154,6 @@ label {
 
 button#submit-button {
     font-family: 'Raleway';
-    font-weight: bold;
     color: white;
     font-weight: bold;
     text-shadow: 1px 1px 1px black;
@@ -195,7 +193,6 @@ button#submit-button:focus {
 
 #results-pane {
     position: absolute;
-    /*height: 100%;*/
     width: 100%;
     top: 0;
     bottom: 25px;
@@ -222,12 +219,11 @@ button#submit-button:focus {
 }
 
 #error-text {
-    font-weight: bold;
     color: white
 }
 
-#instructions-bar {
-    position: absolute;
+.instructions-bar {
+    position: fixed;
     width: 100%;
     min-height: 20px;
     bottom: 0px;
@@ -237,8 +233,7 @@ button#submit-button:focus {
     padding-top: 5px;
 }
 
-#instructions-text {
-    font-weight: bold;
+.instructions-text {
     color: white;
 }
 

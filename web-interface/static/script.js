@@ -72,7 +72,7 @@ crawlerApp.controller('contentController', function($scope, $location) {
                 statusCode: {
                     400: function(xhr) {
                         stopLoadingAfterError();
-                        showErrorBar("There was a problem with your request. "+ '"' + xhr.responseText + '"');
+                        showErrorBar("There was a problem with your request. " + xhr.responseText);
                     },
                     500: function() {
                         stopLoadingAfterError();
@@ -146,7 +146,7 @@ function checkFormFilled() {
 }
 
 function showErrorBar(text) {
-    $("#error-text").text("Error: " + text);
+    $("#error-text").text("Error | " + text);
     if($("#required-bar").hasClass("error-found")) {
         $("#required-bar").removeClass("error-found");
         void document.getElementById("required-bar").offsetWidth;
