@@ -234,7 +234,8 @@ function initD3() {
         .on("click", function(d) {
             d.fx = null;
             d.fy = null;
-            tooltip.html('<a href="' + d.url + '">' + d.url + '</a>'); // show link
+            tooltip.text(d.url);
+            // tooltip.html('<a href="' + d.url + '">' + d.url + '</a>'); // show link
         })
 
         .on("dblclick", function(d) {

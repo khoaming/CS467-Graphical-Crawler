@@ -129,10 +129,10 @@ div.option {
 }
 
 .radio-button {
-    height: 8px;
-    width: 8px;
-    padding: 3px;
-    border: 3px solid #2b6e67;
+    height: 10px;
+    width: 10px;
+    padding: 4px;
+    border: 2px solid #2b6e67;
     border-radius: 100%;
     display: inline-block;
     margin-right: 3px;
