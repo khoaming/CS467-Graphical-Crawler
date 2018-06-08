@@ -26,7 +26,6 @@ def tryUrl(url):
         soup = BeautifulSoup(page.text, "lxml")
         return soup
     except (requests.HTTPError, requests.ConnectionError, requests.exceptions.Timeout, requests.exceptions.RequestException) as e: # skip unreadable urls
-        print("Error", flush=True)
         raise ValueError
 
 class Node:
@@ -50,11 +49,6 @@ class Crawler:
         self.numNodes = 0
 
     def start(self):
-        print(self.startUrl)
-        print(self.mode)
-        print(self.steps)
-        print(self.keyWord)
-
         startNode = Node(self.numNodes, 'Start', self.startUrl, 0)
         self.appendNode(startNode, startNode)
 
@@ -63,7 +57,6 @@ class Crawler:
         if self.mode == 'depth':
             self.dfs()
 
-        print (self.result)
         return (self.result)
 
     def bfs(self):
@@ -99,7 +92,6 @@ class Crawler:
             url = prependHttp(cur.url)
             try:
                 soup = tryUrl(url)
-                print(url, flush=True)
                 if self.keyWord and self.foundKeyWord(cur, soup): return
 
                 links = soup.findAll("a", href=True)
