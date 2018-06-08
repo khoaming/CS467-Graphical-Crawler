@@ -31,8 +31,8 @@ footer, header, hgroup, menu, nav, section {
 body {
     line-height: 1;
     font-family: 'Raleway', sans-serif;
-    color: white;
-    background: slategray;
+    color: #2b6e67;
+    background: #e9e9e9;
 }
 
 ol, ul {
@@ -46,9 +46,10 @@ table {
 
 h1, h2 {
     color: #e33d68;
+    min-width: 280px;
     font-weight: bold;
-    text-shadow: 2px 2px 2px black;
     margin-bottom: 20px;
+    text-shadow: 1px 1px 1px black;
     cursor: default;
 }
 
@@ -56,39 +57,48 @@ h1 {
     font-size: 60px;
 }
 
-p, label {
-    font-size: 20px;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 2px black;
-}
-
 h2 {
     font-size: 30px;
 }
 
+p, label {
+    line-height: 1.2;
+    width: 500px;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+label {
+    width: 120px;
+}
+
 a {
-    color: white;
+    font-weight: bold;
+    color: #2b6e67;
     text-decoration: none;
 }
 
 #content {
+    position: absolute;
     width: 100%;
     height: 100%;
-    margin-top: 2%;
-    margin-bottom: 2%;
-    margin-left: 5%;
-    margin-right: 5%;
 }
 
 input[type=text] {
     background-color: #E1E1E1;
     border-radius: 10px;
-    width: 325px;
+    width: 450px;
     height: 20px;
     font-size: 20px;
     font-family: 'Raleway';
-    border: 2px solid black;
+    border: 2px solid #2b6e67;
     padding: 10px;
+    color: #2b6e67;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: gray;
+    opacity: 1; /* Firefox */
 }
 
 input[type=text]:focus {
@@ -117,11 +127,12 @@ div.option {
     clear: both;
     padding-top: 10px;
 }
+
 .radio-button {
     height: 8px;
     width: 8px;
     padding: 3px;
-    border: 3px solid #E1E1E1;
+    border: 3px solid #2b6e67;
     border-radius: 100%;
     display: inline-block;
     margin-right: 3px;
@@ -129,7 +140,7 @@ div.option {
 }
 
 li:hover .radio-button {
-    border-color: white;
+    border-color: #e33d68;
 }
 
 label {
@@ -144,12 +155,13 @@ button#submit-button {
     font-weight: bold;
     color: white;
     font-weight: bold;
-    text-shadow: 3px 3px 3px black;
+    text-shadow: 1px 1px 1px black;
     cursor: pointer;
     font-size: 30px;
     background-color: #e33d68;
-    border: 2px solid black;
+    border: 2px solid #2b6e67;
     height: 50px;
+    width: 120px;
     text-align: center;
     vertical-align: middle;
     line-height: 40px;
@@ -180,9 +192,16 @@ button#submit-button:focus {
 
 #results-pane {
     position: absolute;
-    height: 600px;
+    height: 100%;
     width: 100%;
-    margin-right: 5%;
+}
+
+#return-pane {
+    position: absolute;
+    width: 68px;
+    top: 2%;
+    left: 2%;
+    color: #2b6e67;
 }
 
 .link {
@@ -194,9 +213,9 @@ button#submit-button:focus {
     position: absolute;
     z-index: 10;
     visibility: hidden;
-    background-color: gray;
+    background-color: #2b6e67;;
     text-align: center;
-    padding: 3px;
+    padding: 5px;
     border-radius: 5px;
     color: white;
 }
@@ -237,25 +256,35 @@ button#submit-button:focus {
     -webkit-padding-end: 40px;
     -moz-padding-end: 40px;
     background-image: url("drop-down-arrow.png");
-    background-position: center right;
+    background-position: 430px;
     background-repeat: no-repeat;
     font-family: inherit;
     font-size: 20px;
     border-radius: 10px;
-    padding-left: 5px;
+    padding-left: 10px;
     padding-bottom: 5px;
     background-color: #E1E1E1;
     background-size: 24px;
-    border: 2px solid black;
-    width: 350px;
+    border: 2px solid #2b6e67;
+    width: 475px;
     height: 45px;
+    color: #2b6e67;
+    text: center;
 }
 
 .steps-select:focus {
+    border: 2px solid #e33d68;
+    transition: border .2s;
     outline: none;
 }
 
 #form-container {
-    margin-left: 50%;
-    transform: translateX(-50%);
+    position: absolute;
+    margin: auto;
+    top: 50px;
+    right: 500px;
+    bottom: 20px;
+    left: 30px;
+    width: 1px;
+    height: 100%;
 }

@@ -97,7 +97,7 @@ crawlerApp.controller('contentController', function($scope, $location) {
 
 crawlerApp.directive("graph", function() {
     return {
-        link: function(scope, element, attrs) {
+        link: function() {
             initD3();
         }
     }
@@ -158,7 +158,8 @@ function initD3() {
     var random = Math.random();
 
     var zoom = d3.zoom()
-        .on("zoom", zoomed);
+        .on("zoom", zoomed)
+        .scaleExtent([0.05, 5]);
 
     var svg = d3.select("#results-pane").append("svg")
         .attr("width", $("#results-pane").width())
@@ -208,7 +209,7 @@ function initD3() {
         .data(bilinks)
         .enter().append("path")
         .attr("class", "link")
-        .style("stroke", function(d) {return (d[0].id === 0) ? "silver": "hsl(" + (360 * random + 60 * d[0].depth) + ",90%,40%)"});
+        .style("stroke", function(d) {return (d[0].id === 0) ? "gray": "hsl(" + (360 * random + 60 * d[0].depth) + ",90%,40%)"});
 
     var node = everything.selectAll(".node")
         .data(nodes.filter(function(d) {return d.depth + 1; })) // to filter out intermediate nodes
@@ -220,7 +221,7 @@ function initD3() {
             if (d.id === keyword_node) {
                 return "red";
             } else if (d.id === 0) {
-                return "silver";
+                return "gray";
             } else {
                 return "hsl(" + (360 * random + 60 * d.depth) + ",90%,40%)";
             }})

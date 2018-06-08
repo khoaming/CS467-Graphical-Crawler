@@ -1,66 +1,64 @@
 <div id="form-container">
-<header>
-    <h1>OctoGraph</h1>
-    <p>Our friendly OctoGraph loves to crawl websites and visualize results.</p>
-    <p>Just feed it some instructions below and it will be good to go!</p>
-    <p>Try giving it a keyword signal to return when found too!</p>
-</header>
-<div id="required-bar"><span id="error-text"></span></div>
-<form id="options-form">
-    <div class="option">
-        <h2>Starting Website <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
-        <span class="input">
-            <input type="text" name="website" id="website-input" ng-value="website" placeholder="Enter starting website" required>
-        </span>
-    </div>
+    <header>
+        <h1>OctoGraph</h1>
+        <p>Our friendly OctoGraph loves to crawl websites and visualize results. Just feed it some instructions below and it will be good to go! Try giving it a keyword to return when found too!</p>
+    </header>
+    <div id="required-bar"><span id="error-text"></span></div>
+    <form id="options-form">
+        <div class="option">
+            <h2>Starting Website <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
+            <span class="input">
+                <input type="text" name="website" id="website-input" ng-value="website" placeholder="Enter starting website" required>
+            </span>
+        </div>
 
-    <div class="option">
-        <h2>Traversal Type <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
-        <ul class="input">
-            <li class="trav-option">
-                <input type="radio" name="traversal" id="depth-option" ng-model="traversal" value="depth" required onchange=radioSelection()>
-                <span class="radio-button"></span>
-                <label for="depth-option">Depth-first</label>
-            </li>
-            <li class="trav-option">
-                <input type="radio" name="traversal" id="breadth-option" ng-model="traversal" value="breadth" onchange=radioSelection()>
-                <span class="radio-button"></span>
-                <label for="breadth-option">Breadth-first</label>
-            </li>
-        </ul>
-    </div>
+        <div class="option">
+            <h2>Traversal Type <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
+            <ul class="input">
+                <li class="trav-option">
+                    <input type="radio" name="traversal" id="depth-option" ng-model="traversal" value="depth" required onchange=radioSelection()>
+                    <span class="radio-button"></span>
+                    <label for="depth-option">Depth-first</label>
+                </li>
+                <li class="trav-option">
+                    <input type="radio" name="traversal" id="breadth-option" ng-model="traversal" value="breadth" onchange=radioSelection()>
+                    <span class="radio-button"></span>
+                    <label for="breadth-option">Breadth-first</label>
+                </li>
+            </ul>
+        </div>
 
-    <div class="option">
-        <h2>Number of Steps <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
-        <span class="input" id="steps-dfs">
-            <select class="steps-select" id="steps-input-dfs" name="steps" ng-model="stepsDepth">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-            </select>
-        </span>
-        <span class="input" id="steps-bfs">
-            <select class="steps-select" id="steps-input-bfs" name="steps" ng-model="stepsBreadth">
-                <option value="1">1</option>
-                <option value="2">2</option>
-            </select>
-        </span>
-    </div>
+        <div class="option">
+            <h2>Number of Steps <i class="fa fa-asterisk" aria-hidden="true"></i></h2>
+            <span class="input" id="steps-dfs">
+                <select class="steps-select" id="steps-input-dfs" name="steps" ng-model="stepsDepth">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </span>
+            <span class="input" id="steps-bfs">
+                <select class="steps-select" id="steps-input-bfs" name="steps" ng-model="stepsBreadth">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </span>
+        </div>
 
-    <div class="option">
-        <h2>Optional keyword signal</h2>
-        <span class="input">
-            <input type="text" id="keyword-input" name="keyword" ng-value="keyword" placeholder="Enter optional single keyword">
-        </span>
-    </div>
-</form>
-<button id="submit-button" ng-click="go('/results')">Go! <i class="fas fa-angle-double-right"></i></button>
+        <div class="option">
+            <h2>Optional Keyword</h2>
+            <span class="input">
+                <input type="text" id="keyword-input" name="keyword" ng-value="keyword" placeholder="Enter optional single keyword">
+            </span>
+        </div>
+    </form>
+    <button id="submit-button" ng-click="go('/results')">Go! >> </button>
 </div>
 <div id="loading-modal"><span class="loading-text"><img src="static/loading.gif"/></span></div>
