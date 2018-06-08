@@ -22,10 +22,12 @@ def tryUrl(url):
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
         }
         page = requests.get(url, headers=headers)
+        page.raise_for_status()
         soup = BeautifulSoup(page.text, "lxml")
         return soup
-    except: # skip unreadable urls
-        pass
+    except (requests.HTTPError, requests.ConnectionError, requests.exceptions.Timeout, requests.exceptions.RequestException) as e: # skip unreadable urls
+        print("Error", flush=True)
+        raise ValueError
 
 class Node:
 
@@ -71,13 +73,15 @@ class Crawler:
             if cur.depth == self.steps: return
 
             url = prependHttp(cur.url)
-            soup = tryUrl(url)
+            try:
+                soup = tryUrl(url)
 
-            if self.keyWord and self.foundKeyWord(cur, soup): return
+                if self.keyWord and self.foundKeyWord(cur, soup): return
 
-            links = soup.findAll("a", href=True)
-            self.visited.append(cur.url)
-
+                links = soup.findAll("a", href=True)
+                self.visited.append(cur.url)
+            except ValueError:
+                pass
             # crawl all unvisited links
             for link in links:
                 if link.get('href') and link.get('href').startswith('http'):
@@ -93,12 +97,15 @@ class Crawler:
 
             if cur.depth == self.steps: return
             url = prependHttp(cur.url)
-            soup = tryUrl(url)
-            print(url, flush=True)
-            if self.keyWord and self.foundKeyWord(cur, soup): return
+            try:
+                soup = tryUrl(url)
+                print(url, flush=True)
+                if self.keyWord and self.foundKeyWord(cur, soup): return
 
-            links = soup.findAll("a", href=True)
-            self.visited.append(cur.url)
+                links = soup.findAll("a", href=True)
+                self.visited.append(cur.url)
+            except ValueError:
+                pass
 
             gotLink = False
             #remove all links without http

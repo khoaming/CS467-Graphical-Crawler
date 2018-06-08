@@ -70,9 +70,9 @@ crawlerApp.controller('contentController', function($scope, $location) {
                     window.scrollTo(0,0);
                 },
                 statusCode: {
-                    400: function() {
+                    400: function(xhr) {
                         stopLoadingAfterError();
-                        showErrorBar("There was a problem with your request.");
+                        showErrorBar("There was a problem with your request. "+ '"' + xhr.responseText + '"');
                     },
                     500: function() {
                         stopLoadingAfterError();

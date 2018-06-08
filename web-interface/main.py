@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template, request, send_file, jsonify, redirect, url_for
 import crawler
+import traceback
 
 TEMPLATE_DIR = os.path.abspath('templates')
 STATIC_DIR = os.path.abspath('static')
@@ -47,11 +48,13 @@ def process_options():
         options_data["keyword"] = None
 
     try:
-        crawler_obj = crawler.Crawler(options_data)
-        result = crawler_obj.start()
+        crawler.tryUrl(crawler.prependHttp(options_data["website"]))
     except ValueError:
         #invalid url
+        traceback.print_exc()
         return 'Invalid URL provided', 400
+    crawler_obj = crawler.Crawler(options_data)
+    result = crawler_obj.start()
     print(jsonify(result))
     return jsonify(result), 200
 
