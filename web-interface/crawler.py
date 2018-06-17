@@ -68,11 +68,8 @@ class Crawler:
             url = prependHttp(cur.url)
             try:
                 soup = tryUrl(url)
-
                 if self.keyWord and self.foundKeyWord(cur, soup): return
-
                 links = soup.findAll("a", href=True)
-                self.visited.append(cur.url)
             except ValueError:
                 pass
             # crawl all unvisited links
@@ -89,13 +86,12 @@ class Crawler:
             cur = self.toCrawl.popleft()
 
             if cur.depth == self.steps: return
+
             url = prependHttp(cur.url)
             try:
                 soup = tryUrl(url)
                 if self.keyWord and self.foundKeyWord(cur, soup): return
-
                 links = soup.findAll("a", href=True)
-                self.visited.append(cur.url)
             except ValueError:
                 pass
 
@@ -129,6 +125,7 @@ class Crawler:
     def appendNode(self, parentNode, childNode):
         self.numNodes += 1
         self.toCrawl.append(childNode)
+        self.visited.append(childNode.url)
 
         title = childNode.title if childNode.title else 'No Title'
         self.result['nodes'].append({
